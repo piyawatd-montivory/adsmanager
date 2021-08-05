@@ -1,0 +1,24 @@
+object FDesktopLogin: TFDesktopLogin
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Login'
+  ClientHeight = 720
+  ClientWidth = 650
+  Position = DesktopCenter
+  FormStyle = StayOnTop
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  DesignerMasterStyle = 0
+  object WebLogin: TWebBrowser
+    EnableCaching = False
+    Align = Client
+    Size.Width = 650.000000000000000000
+    Size.Height = 720.000000000000000000
+    Size.PlatformDefault = False
+    OnDidFinishLoad = WebLoginDidFinishLoad
+  end
+end

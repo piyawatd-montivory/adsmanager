@@ -1,0 +1,290 @@
+object ApplicationConfig: TApplicationConfig
+  StyleName = 'Dark'
+  Left = 0
+  Top = 0
+  BorderStyle = Single
+  Caption = 'Application Option'
+  ClientHeight = 267
+  ClientWidth = 477
+  Fill.Kind = Solid
+  Position = DesktopCenter
+  FormStyle = StayOnTop
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object AccountLabelLayout: TLayout
+    Align = Top
+    Padding.Top = 2.000000000000000000
+    Padding.Bottom = 2.000000000000000000
+    Margins.Left = 10.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 10.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 5.000000000000000000
+    Size.Width = 457.000000000000000000
+    Size.Height = 58.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object AccountTitleLabel: TLabel
+      Align = FitLeft
+      StyledSettings = [FontColor]
+      Position.Y = 2.000000000000000000
+      Size.Width = 263.636352539062500000
+      Size.Height = 58.000007629394530000
+      Size.PlatformDefault = False
+      TextSettings.Font.Family = 'Prompt'
+      TextSettings.Font.Size = 30.000000000000000000
+      TextSettings.Font.StyleExt = {00050000000000000004000000}
+      Text = 'Option'
+    end
+    object Line1: TLine
+      Align = Bottom
+      LineType = Bottom
+      Position.Y = 47.000000000000000000
+      Size.Width = 457.000000000000000000
+      Size.Height = 9.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claCornflowerblue
+    end
+  end
+  object SpaceLayout: TLayout
+    Align = Top
+    Padding.Top = 2.000000000000000000
+    Padding.Bottom = 2.000000000000000000
+    Margins.Left = 10.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 10.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 68.000000000000000000
+    Size.Width = 457.000000000000000000
+    Size.Height = 37.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object SpaceLabel: TLabel
+      Align = Left
+      StyledSettings = [Size, Style, FontColor]
+      Position.Y = 2.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Family = 'Prompt'
+      Text = 'Space Id'
+    end
+    object SpaceTxt: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Client
+      TabOrder = 1
+      Size.Width = 307.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+  object EnvironmentLayout: TLayout
+    Align = Top
+    Padding.Top = 2.000000000000000000
+    Padding.Bottom = 2.000000000000000000
+    Margins.Left = 10.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 10.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 110.000000000000000000
+    Size.Width = 457.000000000000000000
+    Size.Height = 37.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object EnvironmentLabel: TLabel
+      Align = Left
+      StyledSettings = [Size, Style, FontColor]
+      Position.Y = 2.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Family = 'Prompt'
+      Text = 'Environment Name'
+    end
+    object EnvironmentTxt: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Client
+      TabOrder = 1
+      Size.Width = 307.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+  object SaveBtn: TButton
+    Anchors = [akRight, akBottom]
+    StyledSettings = [Size, Style, FontColor]
+    Position.X = 321.000000000000000000
+    Position.Y = 202.000000000000000000
+    Size.Width = 145.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    TextSettings.Font.Family = 'Prompt'
+    OnClick = SaveBtnClick
+    object Layout15: TLayout
+      Align = Client
+      Size.Width = 145.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      object Image3: TImage
+        MultiResBitmap = <
+          item
+            Width = 24
+            Height = 24
+            PNG = {
+              89504E470D0A1A0A0000000D4948445200000018000000180806000000E0773D
+              F8000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+              01DF49444154484BED95BF4BC34014C7DFA5916A8738B8F44F7070755670AB58
+              A83FE91FE01047DD5CA2A0AB0EFE11454D69071107415C3A894B1727A78AAD2D
+              C1A1A595343973977B2149539B8AE2E2072EF77DEF8EF772F7EE12F8E7CF21CB
+              C5634AFB7DCA0D592661CD7A66A39F11352FACAFB73489F5FC018904E12D4A23
+              E8F78F8DD20E6E02CBA2BC456904FDFEB1519AC1B6E8BDD7A13F058B95393FB4
+              457890D9633A998252A904F57A9D3B91743A0DB95C4E5841C2F3712E8B8575E3
+              F022FF30032B6044AD00515555A86F802BB06DDBEBFD0D314DD37BAB71E0F7E0
+              6A751F745D8766B329DCD1A83BAA74B2AA8F95C84BD0772E88CC2E0A754F1821
+              04502367999BC97EAAD3637AB7B8CE7DC33859D379EFD54092245E791618F16B
+              C330C0E84E594AAA233C00854241A820F97C5E285F8272B90C8D4643582E78F4
+              5AAD16542A1567398A1871F1071A8697209BCDF22D1266805AAD06ED76DB51C1
+              047156C06B70B1B207A989A4700DE760F332A958E483E9B8352019FD2858C92F
+              98AF9A09A53A67093316915B320C4DD3A4DF4DB070272B332D53987C9BA84D81
+              B807D003B787E17EAE637270BF38F0F6A71BC540C030632520E0FCB0A8B52DCC
+              5824441F9BDB27FD716976ED452252B66D74E1EDF99DFB997E7E78E50D7D0000
+              9F5D55B0BB816FB5A80000000049454E44AE426082}
+          end>
+        HitTest = False
+        Position.X = 12.000000000000000000
+        Position.Y = 12.000000000000000000
+        Size.Width = 25.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Label10: TLabel
+        Anchors = [akLeft, akTop, akRight]
+        StyledSettings = [Style, FontColor]
+        Position.X = 48.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 89.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Prompt'
+        TextSettings.Font.Size = 14.000000000000000000
+        Text = 'Save'
+        TabOrder = 1
+      end
+    end
+  end
+  object CancelBtn: TButton
+    Anchors = [akRight, akBottom]
+    StyledSettings = [Size, Style, FontColor]
+    ModalResult = 2
+    Position.X = 161.000000000000000000
+    Position.Y = 202.000000000000000000
+    Size.Width = 145.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    TextSettings.Font.Family = 'Prompt'
+    object Layout3: TLayout
+      Align = Client
+      Size.Width = 145.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      object Image1: TImage
+        MultiResBitmap = <
+          item
+            Width = 24
+            Height = 24
+            PNG = {
+              89504E470D0A1A0A0000000D4948445200000018000000180806000000E0773D
+              F8000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+              031349444154484BED945D4853511CC0FFF7ABB9290C2C49B22721AD24B08FB5
+              68581958613836A324E845245008247A2A48F1A10723E8B12CEB3594C6C4341F
+              2A52039B598919AEC28250726B5F21D36DF7EEDED33967F7AC690B53845EFAC1
+              B9F7FF71F63FE7FF7107FFF9E770275DD7104A26115544915B2E9337D1999D90
+              6DDF72F9715D2B4FDEF40182C0D1954D66307BA66F2519933A4055115DD96406
+              B367FA569209A4443FE20B68BD20B1AABBDA343D3C88E4613698C0ED7683CFE7
+              A34646616121389D4E5D5BCAF2FD6C2F89C5FA46A14D5E677ECB80902D034653
+              53932EAD9EF4010E8703388E037C01DD9282D808C98C311571093A3B3B415194
+              84A6692F789E9FC466244952597D7DFD612C1BE8464CFA0097CB05814040D7B2
+              424F329BCD60B3D9100EDED1D8D8D8F2D5692D5205AE8AFA39F4806F68F802A2
+              D042F612E887D6577B85DE90DC8C65902D1B828A47501084F353670EBA638B89
+              10C7A7269D81345C7E03B7C5E27E3B47F4B417A7496F4802B3B23099AC482402
+              5EAF17C6C7C73B68F0682CA4C6174109FFCA5A0E7D07351E0388ABDF264EECDF
+              4A6CE912F5F4F480DFEFD7B5146CF482C1208C8C8CA0F9F9F904BEC8D5127C73
+              352983F5D907083EE905EFC573001A82B2DB0F21FFD071183DBA0364233F8343
+              70E903EC763B2D91AE2E61767616A2D128C8B23C5CD9D75114C6C96AD10588BC
+              7C0E9BAAEC507CF93AF0861C1A3C3C34001ACE4CCCCD85D16A4B39ED4177CD25
+              3049E9C6FF113C313767EA6CBE605C69C7D586C5E94F50D27E0736DBCF52FF5C
+              F77D986E6B06537129D511A0669134F274EF0D6A581184B45BF8EF2CA5E06439
+              045A02D75C475314D2385DA3EE0CED2F993965B5FA13498F1C0A4069FB5DC8AF
+              3806735DF780379A6826C1A78F60BAF50248F90578A2D001FD67AB63AC7A37F2
+              5496E2E4110A0D0EA0E19D7968787B1E0A8F0E519BE7C83644F690BDABCE80F0
+              AE765F712296FC4C4652C36BC3C6026C4520E369E38D4610728C20F1E2AEF2FE
+              D7EFD7740061CA61295990931F977E68B8AD785C054E2ADFD3FF6A8258D67C00
+              63AC66AF0D37B382C8785E3C96FE3783D44101F809DD9E28B98BDE6407000000
+              0049454E44AE426082}
+          end>
+        HitTest = False
+        Position.X = 12.000000000000000000
+        Position.Y = 12.000000000000000000
+        Size.Width = 25.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Label1: TLabel
+        Anchors = [akLeft, akTop, akRight]
+        StyledSettings = [Style, FontColor]
+        Position.X = 48.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 89.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Prompt'
+        TextSettings.Font.Size = 14.000000000000000000
+        Text = 'Cancel'
+        TabOrder = 1
+      end
+    end
+  end
+  object Layout2: TLayout
+    Align = Top
+    Padding.Top = 2.000000000000000000
+    Padding.Bottom = 2.000000000000000000
+    Margins.Left = 10.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 10.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 152.000000000000000000
+    Size.Width = 457.000000000000000000
+    Size.Height = 37.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object ImageWidthLabel: TLabel
+      Align = Left
+      StyledSettings = [Size, Style, FontColor]
+      Position.Y = 2.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Family = 'Prompt'
+      Text = 'Image Width Limit'
+    end
+    object ImageWidth: TNumberBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Client
+      TabOrder = 1
+      Cursor = crIBeam
+      DecimalDigits = 0
+      Max = 1920.000000000000000000
+      Value = 1920.000000000000000000
+      Size.Width = 307.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+end
