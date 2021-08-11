@@ -179,7 +179,8 @@ begin
     if ConObj.Position = 'Index-Position6' then PositionCbo.ItemIndex := 5;
     if ConObj.Position = 'Category-Position1' then PositionCbo.ItemIndex := 6;
     if ConObj.Position = 'Category-Position2' then PositionCbo.ItemIndex := 7;
-    if ConObj.Position = 'Article' then PositionCbo.ItemIndex:=8;
+    if ConObj.Position = 'Article-Position1' then PositionCbo.ItemIndex:=8;
+    if ConObj.Position = 'Article-Position2' then PositionCbo.ItemIndex:=9;
   end;
 end;
 end;

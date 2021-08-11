@@ -2,38 +2,38 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>2021/07/29 12:58:32.000.214,=C:\Users\piyawat\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2021/07/29 12:59:00.000.651,C:\Users\piyawat\Documents\Embarcadero\Studio\Projects\Unit1.fmx=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Main.fmx</Transaction>
-    <Transaction>2021/07/29 12:59:00.000.651,C:\Users\piyawat\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Main.pas</Transaction>
-    <Transaction>2021/07/29 12:59:19.000.949,C:\Users\piyawat\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\AdsManager.dproj</Transaction>
+    <Transaction>2021/07/29 12:59:00.000.651,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Main.pas=C:\Users\piyawat\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/07/29 12:59:00.000.651,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Main.fmx=C:\Users\piyawat\Documents\Embarcadero\Studio\Projects\Unit1.fmx</Transaction>
+    <Transaction>2021/07/29 12:59:19.000.949,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\AdsManager.dproj=C:\Users\piyawat\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
     <Transaction>2021/07/29 13:02:32.000.136,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
-    <Transaction>2021/07/29 13:03:15.000.057,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.fmx=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Ads\AdsLists.fmx</Transaction>
-    <Transaction>2021/07/29 13:03:15.000.057,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Ads\AdsLists.pas</Transaction>
+    <Transaction>2021/07/29 13:03:15.000.057,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Ads\AdsLists.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
+    <Transaction>2021/07/29 13:03:15.000.057,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Ads\AdsLists.fmx=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.fmx</Transaction>
     <Transaction>2021/07/29 13:03:43.000.589,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
-    <Transaction>2021/07/29 13:04:01.000.573,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.fmx=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Ads\AdsForm.fmx</Transaction>
-    <Transaction>2021/07/29 13:04:01.000.573,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Ads\AdsForm.pas</Transaction>
+    <Transaction>2021/07/29 13:04:01.000.573,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Ads\AdsForm.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
+    <Transaction>2021/07/29 13:04:01.000.573,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Ads\AdsForm.fmx=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.fmx</Transaction>
     <Transaction>2021/08/02 09:32:09.000.025,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
-    <Transaction>2021/08/02 09:33:28.000.212,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Model\MAds.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
-    <Transaction>2021/08/02 09:36:25.000.806,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\ModelHelper.pas</Transaction>
+    <Transaction>2021/08/02 09:33:28.000.212,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Model\MAds.pas</Transaction>
     <Transaction>2021/08/02 09:36:25.000.837,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\ValidateHelper.pas</Transaction>
+    <Transaction>2021/08/02 09:36:25.000.806,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\ModelHelper.pas</Transaction>
     <Transaction>2021/08/02 09:36:25.000.744,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\ContentfulSchedule.pas</Transaction>
-    <Transaction>2021/08/02 09:36:25.000.775,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\DDateTime.pas</Transaction>
     <Transaction>2021/08/02 09:36:25.000.276,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\ContentfulImage.pas</Transaction>
+    <Transaction>2021/08/02 09:36:25.000.775,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\DDateTime.pas</Transaction>
     <Transaction>2021/08/02 11:18:14.000.980,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\Log.pas</Transaction>
     <Transaction>2021/08/02 11:35:25.000.446,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Config\FApplicationConfig.pas</Transaction>
     <Transaction>2021/08/03 11:15:03.000.947,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
-    <Transaction>2021/08/03 11:15:20.000.931,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\ContentfulVideo.pas</Transaction>
+    <Transaction>2021/08/03 11:15:20.000.931,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\ContentfulVideo.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
     <Transaction>2021/08/04 15:10:31.000.360,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\DesktopLogin.pas</Transaction>
     <Transaction>2021/08/04 15:14:53.000.814,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Model\MProfile.pas</Transaction>
-    <Transaction>2021/08/04 15:21:39.000.579,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\MarkdownHTMLEntities.pas</Transaction>
-    <Transaction>2021/08/04 15:21:39.000.595,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\MarkdownProcessor.pas</Transaction>
     <Transaction>2021/08/04 15:21:39.000.517,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\MarkdownCommonMark.pas</Transaction>
-    <Transaction>2021/08/04 15:21:39.000.610,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\MarkdownUnicodeUtils.pas</Transaction>
+    <Transaction>2021/08/04 15:21:39.000.579,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\MarkdownHTMLEntities.pas</Transaction>
     <Transaction>2021/08/04 15:21:39.000.548,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\MarkdownDaringFireball.pas</Transaction>
+    <Transaction>2021/08/04 15:21:39.000.610,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\MarkdownUnicodeUtils.pas</Transaction>
+    <Transaction>2021/08/04 15:21:39.000.595,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Helper\MarkdownProcessor.pas</Transaction>
     <Transaction>2021/08/04 16:09:51.000.985,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Profile\SpacebarProfile.pas</Transaction>
     <Transaction>2021/08/04 16:23:25.000.753,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Profile\SpacebarProfile.pas=</Transaction>
     <Transaction>2021/08/04 16:24:44.000.919,=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
-    <Transaction>2021/08/04 16:24:56.000.012,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Profile\SpacebarProfile.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas</Transaction>
-    <Transaction>2021/08/04 16:24:56.000.012,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Profile\SpacebarProfile.fmx=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.fmx</Transaction>
+    <Transaction>2021/08/04 16:24:56.000.012,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.pas=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Profile\SpacebarProfile.pas</Transaction>
+    <Transaction>2021/08/04 16:24:56.000.012,C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Unit1.fmx=C:\Users\piyawat\Desktop\DelphiProject\AdsManager\Profile\SpacebarProfile.fmx</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
 		<Pspacebardev iOSSimulator="iPhone5"/>
