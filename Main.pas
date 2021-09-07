@@ -11,7 +11,7 @@ uses
   System.Win.Registry,
   {$ENDIF}
   AdsLists,System.JSON,REST.Types,REST.Client, FMX.Memo.Types, FMX.ScrollBox,
-  FMX.Memo, FMX.DateTimeCtrls,System.DateUtils,MProfile;
+  FMX.Memo, FMX.DateTimeCtrls,System.DateUtils,MProfile, FMX.WebBrowser;
 
 type
   TMainApplication = class(TForm)
@@ -54,6 +54,7 @@ type
     FrameStand1: TFrameStand;
     Button2: TButton;
     Button3: TButton;
+    Label1: TLabel;
     procedure PollBtnClick(Sender: TObject);
     procedure AppConfigBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

@@ -111,22 +111,22 @@ begin
 
   var OriginImg:= TImage.Create(nil);
   OriginImg.Bitmap.LoadFromFile(FilePath);
-  var MyRect := TRectF.Create( 0, 0, OriginImg.Bitmap.Width-10, OriginImg.Bitmap.Height-10);
-  with OriginImg.Bitmap.Canvas do
-  begin
-        BeginScene;
-        Fill.Color:=TAlphaColors.White;
-        Font.Size:=Int(OriginImg.Bitmap.Height*5)/100;
-        {$IFDEF MACOS}
-        FillText(MyRect, 'Copyright © spacebar', false, 100,
-        [TFillTextFlag.RightToLeft], TTextAlign.Trailing, TTextAlign.Trailing);
-        {$ENDIF}
-        {$IFDEF MSWINDOWS}
-          FillText(MyRect, 'Copyright © spacebar', false, 100,
-        [TFillTextFlag.RightToLeft], TTextAlign.Leading, TTextAlign.Trailing);
-        {$ENDIF}
-        EndScene
-  end;
+//  var MyRect := TRectF.Create( 0, 0, OriginImg.Bitmap.Width-10, OriginImg.Bitmap.Height-10);
+//  with OriginImg.Bitmap.Canvas do
+//  begin
+//        BeginScene;
+//        Fill.Color:=TAlphaColors.White;
+//        Font.Size:=Int(OriginImg.Bitmap.Height*5)/100;
+//        {$IFDEF MACOS}
+//        FillText(MyRect, 'Copyright © spacebar', false, 100,
+//        [TFillTextFlag.RightToLeft], TTextAlign.Trailing, TTextAlign.Trailing);
+//        {$ENDIF}
+//        {$IFDEF MSWINDOWS}
+//          FillText(MyRect, 'Copyright © spacebar', false, 100,
+//        [TFillTextFlag.RightToLeft], TTextAlign.Leading, TTextAlign.Trailing);
+//        {$ENDIF}
+//        EndScene
+//  end;
   var LStream := TMemoryStream.Create;
   OriginImg.Bitmap.SaveToStream(LStream);
   PreviewImage := OriginImg.Bitmap;

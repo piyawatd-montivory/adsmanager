@@ -29,6 +29,11 @@ Ads Management is application on mac, windows. For manage ads on contentful with
 
 # Change Log
 
+## Version 1.0.1
+
+- remove watermark upload photo
+- add version text in application
+
 ## Version 1
 
 - Create, update ads to contentful
