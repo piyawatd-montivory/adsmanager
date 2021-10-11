@@ -50,30 +50,12 @@ type
     ProfileBtn: TButton;
     RegisterBtn: TButton;
     FrameStand1: TFrameStand;
-    Button2: TButton;
-    Button3: TButton;
     Label1: TLabel;
-    PositionCbo: TComboBox;
-    AllPosition: TListBoxItem;
-    IndexPosition1: TListBoxItem;
-    IndexPosition2: TListBoxItem;
-    IndexPosition3: TListBoxItem;
-    IndexPosition4: TListBoxItem;
-    IndexPosition5: TListBoxItem;
-    IndexPosition6: TListBoxItem;
-    CategoryPosition1: TListBoxItem;
-    CategoryPosition2: TListBoxItem;
-    ArticlePosition1: TListBoxItem;
-    ArticlePosition2: TListBoxItem;
-    Button4: TButton;
     procedure AdsMenuBtnClick(Sender: TObject);
     procedure AppConfigBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
     procedure LoginMenuBtnClick(Sender: TObject);
     procedure SProfileImageClick(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
     FFrameAdsLists: TFrameInfo<TfAdsLists>;
@@ -143,38 +125,6 @@ end;
           ImageWidthLimit := AppConfig.ImageWidth.Value.ToString.ToInteger();
       end;
     end;
-
-procedure TMainApplication.Button2Click(Sender: TObject);
-begin
-  var
-  FormAds := TfAdsForm.Create(nil);
-  FormAds.CmaToken := CmaToken;
-  FormAds.SpaceId := SpaceId;
-  FormAds.Environment := Environment;
-  FormAds.ImageWidthLimit := 1920;
-  FormAds.PublishStatus := False;
-//  FormAds.AdsId := '5FzPpXvHDKXl1upBswGWHy';
-  FormAds.PublishStatus := False;
-  if FormAds.ShowModal = mrOk then
-end;
-
-procedure TMainApplication.Button3Click(Sender: TObject);
-begin
-var
-  FormAds := TfAdsForm.Create(nil);
-  FormAds.CmaToken := CmaToken;
-  FormAds.SpaceId := SpaceId;
-  FormAds.Environment := Environment;
-  FormAds.ImageWidthLimit := ImageWidthLimit;
-  FormAds.PublishStatus := True;
-  FormAds.AdsId:='52ZX9gePyIlxMaOqdJorsP';
-  if FormAds.ShowModal = mrOk then
-end;
-
-procedure TMainApplication.Button4Click(Sender: TObject);
-begin
-ShowMessage(PositionCbo.Selected.Index.ToString);
-end;
 
 procedure TMainApplication.FormCreate(Sender: TObject);
       var

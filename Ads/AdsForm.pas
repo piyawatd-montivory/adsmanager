@@ -29,11 +29,9 @@ type
     PhotoDetailLabel: TLabel;
     BottomLayout: TLayout;
     SaveBtn: TButton;
-    Layout15: TLayout;
     Image3: TImage;
     Label10: TLabel;
     CloseBtn: TButton;
-    Layout4: TLayout;
     Image1: TImage;
     Label2: TLabel;
     OpenDialogAdsVideo: TOpenDialog;
@@ -85,11 +83,13 @@ type
     CategoryPosition2: TListBoxItem;
     ArticlePosition1: TListBoxItem;
     ArticlePosition2: TListBoxItem;
+    AdsSizeLabel: TLabel;
     procedure UploadPhotoClick(Sender: TObject);
     procedure ButtonVdoClick(Sender: TObject);
     procedure SaveBtnClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure PositionCboChange(Sender: TObject);
   private
     { Private declarations }
     aAdsImage, aAdsVdo, AcLog: WideString;
@@ -103,6 +103,7 @@ type
     UploadType: WideString;
     PublishStatus: Boolean;
     ImageWidthLimit, Version: Integer;
+    procedure ChangeAdsLabel;
   end;
 
 var
@@ -113,6 +114,22 @@ implementation
 uses ContentfulVideo, ContentfulImage, ContentfulSchedule, MAds, DDateTime;
 
 {$R *.fmx}
+
+procedure TfAdsForm.ChangeAdsLabel;
+begin
+var labelList := TStringList.Create;
+labelList.Add('Ads ขนาด 970 * 250 pixel');
+labelList.Add('Ads ขนาด 336 * 280 pixel');
+labelList.Add('Ads ขนาด 336 * 280 pixel');
+labelList.Add('Ads ขนาด 336 * 280 pixel');
+labelList.Add('Ads ขนาด 970 * 250 pixel');
+labelList.Add('Ads ขนาด 300 * 600 pixel');
+labelList.Add('Ads ขนาด 970 * 250 pixel');
+labelList.Add('Ads ขนาด 336 * 280 pixel');
+labelList.Add('Ads ขนาด 728 * 90 pixel');
+labelList.Add('Ads ขนาด 336 * 280 pixel');
+AdsSizeLabel.Text := labelList[PositionCbo.Selected.Index];
+end;
 
 procedure TfAdsForm.FormCreate(Sender: TObject);
 begin
@@ -196,6 +213,7 @@ begin
         PositionCbo.ItemIndex := 8;
       if ConObj.Position = 'Article-Position2' then
         PositionCbo.ItemIndex := 9;
+      ChangeAdsLabel;
     end;
   end;
 end;
@@ -283,6 +301,11 @@ begin
       end;
       VdoTxt.Text := OpenDialogAdsVideo.FileName;
     end;
+end;
+
+procedure TfAdsForm.PositionCboChange(Sender: TObject);
+begin
+ChangeAdsLabel;
 end;
 
 procedure TfAdsForm.ProcessContentful;
