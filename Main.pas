@@ -11,7 +11,8 @@ uses
   System.Win.Registry,
   {$ENDIF}
   AdsLists,System.JSON,REST.Types,REST.Client, FMX.Memo.Types, FMX.ScrollBox,
-  FMX.Memo, FMX.DateTimeCtrls,System.DateUtils,MProfile, FMX.WebBrowser;
+  FMX.Memo, FMX.DateTimeCtrls,System.DateUtils,MProfile, FMX.WebBrowser,
+  FMX.ListBox;
 
 type
   TMainApplication = class(TForm)
@@ -33,16 +34,13 @@ type
     SProfileImage: TCircle;
     ProfileName: TLabel;
     TitleLabel: TLabel;
-    PollBtn: TButton;
-    Layout6: TLayout;
+    AdsMenuBtn: TButton;
     Image7: TImage;
     Label6: TLabel;
     AppConfigBtn: TButton;
-    Layout8: TLayout;
     Image9: TImage;
     Label8: TLabel;
     LoginMenuBtn: TButton;
-    Layout4: TLayout;
     Image5: TImage;
     Label4: TLabel;
     TabConfigBg: TRectangle;
@@ -55,13 +53,27 @@ type
     Button2: TButton;
     Button3: TButton;
     Label1: TLabel;
-    procedure PollBtnClick(Sender: TObject);
+    PositionCbo: TComboBox;
+    AllPosition: TListBoxItem;
+    IndexPosition1: TListBoxItem;
+    IndexPosition2: TListBoxItem;
+    IndexPosition3: TListBoxItem;
+    IndexPosition4: TListBoxItem;
+    IndexPosition5: TListBoxItem;
+    IndexPosition6: TListBoxItem;
+    CategoryPosition1: TListBoxItem;
+    CategoryPosition2: TListBoxItem;
+    ArticlePosition1: TListBoxItem;
+    ArticlePosition2: TListBoxItem;
+    Button4: TButton;
+    procedure AdsMenuBtnClick(Sender: TObject);
     procedure AppConfigBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure LoginMenuBtnClick(Sender: TObject);
     procedure SProfileImageClick(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
     FFrameAdsLists: TFrameInfo<TfAdsLists>;
@@ -94,7 +106,7 @@ uses FApplicationConfig,AdsForm,ContentfulVideo,DesktopLogin,ContentfulImage,Spa
 
 {$R *.fmx}
 
-procedure TMainApplication.PollBtnClick(Sender: TObject);
+procedure TMainApplication.AdsMenuBtnClick(Sender: TObject);
 begin
 {$IFDEF MACOS}
 _LoadFrame('Ads');
@@ -127,7 +139,7 @@ end;
       if AppConfig.ShowModal = mrOK then
       begin
           SpaceId := AppConfig.SpaceTxt.Text;
-          Environment := AppConfig.EnvironmentTxt.Text;
+          Environment := AppConfig.EnvCbo.Selected.Text;
           ImageWidthLimit := AppConfig.ImageWidth.Value.ToString.ToInteger();
       end;
     end;
@@ -157,6 +169,11 @@ var
   FormAds.PublishStatus := True;
   FormAds.AdsId:='52ZX9gePyIlxMaOqdJorsP';
   if FormAds.ShowModal = mrOk then
+end;
+
+procedure TMainApplication.Button4Click(Sender: TObject);
+begin
+ShowMessage(PositionCbo.Selected.Index.ToString);
 end;
 
 procedure TMainApplication.FormCreate(Sender: TObject);

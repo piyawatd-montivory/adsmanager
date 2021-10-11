@@ -97,10 +97,8 @@ PreviewImage.Bitmap := ProfileObj.ProfilePicture;
 end;
 
 procedure TfProfile.SaveBtnClick(Sender: TObject);
-var
-  Result: TJSONObject;
 begin
-  Result := TJSONObject.Create;
+  var Result := TJSONObject.Create;
   ProfileObj.Firstname := FirstnameTxt.Text;
   ProfileObj.Lastname := LastnameTxt.Text;
   ProfileObj.Intro := IntroTxt.Text;
@@ -114,7 +112,10 @@ begin
       ImgObj := MContentfulImage.Create(CmaToken,SpaceId,Environment);
     if DeleteAssetId <> '' then
     begin
-      ImgObj.DeleteImage(DeleteAssetId,ProfileObj.AssetVersion);
+      ImgObj.Id := DeleteAssetId;
+      ImgObj.Version := ProfileObj.AssetVersion;
+      ImgObj.UnPublish;
+      ImgObj.DeleteImage;
       ProfileObj.AssetId := '';
     end;
     if aFile <> '' then
@@ -124,22 +125,52 @@ begin
       var
       extFile := ExtractFileExt(aFile);
       FileName := StringReplace(FileName, extFile, '', [rfReplaceAll]);
-      var
-      uploadId := ImgObj.Upload(aFile, FileName, extFile);
-      var
-      casset := ImgObj.CreateAssets(uploadId, FileName,
-        FileName, extFile);
-      ImgObj.DeleteImage(AssetId,2);
-      var newAssetId := casset.FindValue('sys.id').Value;
-      var
-      proresult := ImgObj.ProcessAssets(newAssetId);
-      ProfileObj.AssetId := newAssetId;
-      ProfileObj.AssetVersion := 2;
+      //upload file
+      if ImgObj.Upload(aFile, extFile) then
+      begin
+        var casset := ImgObj.CreateAsset(FileName,'',FileName);
+        if casset.FindValue('status').Value.ToBoolean then
+        begin
+          //process file
+          if ImgObj.ProcessAssets then
+          begin
+            //get file version
+            var assetVersion := ImgObj.GetVersion;
+            //publish file
+            if ImgObj.Publish then
+            begin
+              ProfileObj.AssetId := ImgObj.Id;
+              ProfileObj.AssetVersion := ImgObj.Version;
+            end
+            else
+            begin
+              ShowMessage('Can not publish profile photo');
+              exit;
+            end;
+          end
+          else
+          begin
+            ShowMessage('Can not process profile photo');
+            exit;
+          end;
+        end
+        else
+        begin
+          ShowMessage('Can not create profile photo');
+          exit;
+        end;
+      end
+      else
+      begin
+        ShowMessage('Can not upload profile photo.');
+        exit;
+      end;
     end;
     // update
     Result := ProfileObj.Update;
     if Result.FindValue('status').Value.ToBoolean then
     begin
+      var resultPublish := ProfileObj.Publish;
       ShowMessage(Result.FindValue('message').Value);
       ProfileObj.ProfilePicture := PreviewImage.Bitmap;
       ModalResult := mrOk;

@@ -3,11 +3,13 @@
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.SysUtils, System.Types, System.UITypes, System.Classes,
+  System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Objects,
-  FMX.StdCtrls, FMX.Edit, FMX.Controls.Presentation, FMX.Layouts, FMX.TabControl,
-  FMX.Memo.Types, FMX.ListBox, FMX.ScrollBox, FMX.Memo, FMX.Media,System.JSON,
-  FMX.DateTimeCtrls, FMX.Ani,System.DateUtils,System.Threading;
+  FMX.StdCtrls, FMX.Edit, FMX.Controls.Presentation, FMX.Layouts,
+  FMX.TabControl,
+  FMX.Memo.Types, FMX.ListBox, FMX.ScrollBox, FMX.Memo, FMX.Media, System.JSON,
+  FMX.DateTimeCtrls, FMX.Ani, System.DateUtils, System.Threading;
 
 type
   TfAdsForm = class(TForm)
@@ -90,17 +92,17 @@ type
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
-    aAdsImage,aAdsVdo,AcLog:WideString;
-    delAdsImageId,delAdsVdoId,AdsImageId,AdsVdoId,CurrentMediaType:String;
-    AdsImageVersion,AdsVdoVersion,AView,AClick,Ratio : Integer;
-    FormOpen:Boolean;
+    aAdsImage, aAdsVdo, AcLog: WideString;
+    delAdsImageId, delAdsVdoId, AdsImageId, AdsVdoId, CurrentMediaType: String;
+    AdsImageVersion, AdsVdoVersion, AView, AClick, Ratio: Integer;
+    FormOpen: Boolean;
     procedure ProcessContentful;
   public
     { Public declarations }
-    CmaToken, SpaceId, Environment,AdsId, ResultForm: String;
+    CmaToken, SpaceId, Environment, AdsId, ResultForm: String;
     UploadType: WideString;
     PublishStatus: Boolean;
-    ImageWidthLimit,Version : Integer;
+    ImageWidthLimit, Version: Integer;
   end;
 
 var
@@ -108,81 +110,94 @@ var
 
 implementation
 
-uses ContentfulVideo,ContentfulImage,ContentfulSchedule,MAds,DDateTime;
+uses ContentfulVideo, ContentfulImage, ContentfulSchedule, MAds, DDateTime;
 
 {$R *.fmx}
 
 procedure TfAdsForm.FormCreate(Sender: TObject);
 begin
-FormOpen:=False;
-AView:=0;
-AClick:=0;
-Ratio:=0;
-AdsstartdateTxt.DateTime:=now;
-AdsstarttimeTxt.DateTime:=now;
-AdsenddateTxt.DateTime:=now;
-AdsendtimeTxt.DateTime:=now;
+  FormOpen := False;
+  AView := 0;
+  AClick := 0;
+  Ratio := 0;
+  AdsstartdateTxt.DateTime := now;
+  AdsstarttimeTxt.DateTime := now;
+  AdsenddateTxt.DateTime := now;
+  AdsendtimeTxt.DateTime := now;
 end;
 
 procedure TfAdsForm.FormShow(Sender: TObject);
 begin
-if FormOpen = False then
-begin
-  if AdsId <> '' then
+  if FormOpen = False then
   begin
-    var
-    ConObj := TMAds.Create(CmaToken, SpaceId, Environment);
-    var
-    Result := ConObj.GetById(AdsId);
-    AcLog := ConObj.AcLog;
-    Version := ConObj.Version;
-    AView := ConObj.AView;
-    AClick := ConObj.AClick;
-    Ratio := ConObj.Ratio;
-    CurrentMediaType := ConObj.AType;
-    if ConObj.AType = 'Photo' then
+    if AdsId <> '' then
     begin
-      TypeCbo.Selected.Index:=0;
-      AdsImageId:=ConObj.AdsmediaId;
-      AdsImageVersion:=ConObj.AdsmediaVersion;
       var
-      vObj := MContentfulImage.Create(CmaToken, SpaceId, Environment);
+      ConObj := TMAds.Create(CmaToken, SpaceId, Environment);
       var
-      MS := vObj.LoadImage(ConObj.Adsmedia);
-      PreviewImage.Bitmap.LoadFromStream(MS);
-      vObj.Free;
-    end
-    else
-    begin
-      TypeCbo.Selected.Index:=1;
-      AdsVdoId:=ConObj.AdsmediaId;
-      AdsVdoVersion:=ConObj.AdsmediaVersion;
-      VdoTxt.Text := ConObj.Adsmedia;
+      Result := ConObj.GetById(AdsId);
+      AcLog := ConObj.AcLog;
+      Version := ConObj.Version;
+      AView := ConObj.AView;
+      AClick := ConObj.AClick;
+      Ratio := ConObj.Ratio;
+      CurrentMediaType := ConObj.AType;
+      if ConObj.AType = 'Photo' then
+      begin
+        TypeCbo.Selected.Index := 0;
+        AdsImageId := ConObj.AdsmediaId;
+        AdsImageVersion := ConObj.AdsmediaVersion;
+        var
+        vObj := MContentfulImage.Create(CmaToken, SpaceId, Environment);
+        var
+        MS := vObj.LoadImage(ConObj.Adsmedia);
+        PreviewImage.Bitmap.LoadFromStream(MS);
+        vObj.Free;
+      end
+      else
+      begin
+        TypeCbo.Selected.Index := 1;
+        AdsVdoId := ConObj.AdsmediaId;
+        AdsVdoVersion := ConObj.AdsmediaVersion;
+        VdoTxt.Text := ConObj.Adsmedia;
+      end;
+      TitleTxt.Text := ConObj.Title;
+      SlugTxt.Text := ConObj.Slug;
+      SlugTxt.ReadOnly := True;
+      LinkTxt.Text := ConObj.Link;
+      var
+      dateObj := CDateTime.Create;
+      var
+      adsstarto := dateObj.ContentfulStrToDatetime(ConObj.Adsstart);
+      var
+      adsendo := dateObj.ContentfulStrToDatetime(ConObj.Adsend);
+      AdsstartdateTxt.DateTime := adsstarto;
+      AdsstarttimeTxt.DateTime := adsstarto;
+      AdsenddateTxt.DateTime := adsendo;
+      AdsendtimeTxt.DateTime := adsendo;
+      // Position
+      if ConObj.Position = 'Index-Position1' then
+        PositionCbo.ItemIndex := 0;
+      if ConObj.Position = 'Index-Position2' then
+        PositionCbo.ItemIndex := 1;
+      if ConObj.Position = 'Index-Position3' then
+        PositionCbo.ItemIndex := 2;
+      if ConObj.Position = 'Index-Position4' then
+        PositionCbo.ItemIndex := 3;
+      if ConObj.Position = 'Index-Position5' then
+        PositionCbo.ItemIndex := 4;
+      if ConObj.Position = 'Index-Position6' then
+        PositionCbo.ItemIndex := 5;
+      if ConObj.Position = 'Category-Position1' then
+        PositionCbo.ItemIndex := 6;
+      if ConObj.Position = 'Category-Position2' then
+        PositionCbo.ItemIndex := 7;
+      if ConObj.Position = 'Article-Position1' then
+        PositionCbo.ItemIndex := 8;
+      if ConObj.Position = 'Article-Position2' then
+        PositionCbo.ItemIndex := 9;
     end;
-    TitleTxt.Text := ConObj.Title;
-    SlugTxt.Text := ConObj.Slug;
-    SlugTxt.ReadOnly := True;
-    LinkTxt.Text := ConObj.Link;
-    var dateObj := CDateTime.Create;
-    var adsstarto := dateObj.ContentfulStrToDatetime(ConObj.Adsstart);
-    var adsendo := dateObj.ContentfulStrToDatetime(ConObj.Adsend);
-    AdsstartdateTxt.DateTime := adsstarto;
-    AdsstarttimeTxt.DateTime := adsstarto;
-    AdsenddateTxt.DateTime := adsendo;
-    AdsendtimeTxt.DateTime := adsendo;
-    //Position
-    if ConObj.Position = 'Index-Position1' then PositionCbo.ItemIndex := 0;
-    if ConObj.Position = 'Index-Position2' then PositionCbo.ItemIndex := 1;
-    if ConObj.Position = 'Index-Position3' then PositionCbo.ItemIndex := 2;
-    if ConObj.Position = 'Index-Position4' then PositionCbo.ItemIndex := 3;
-    if ConObj.Position = 'Index-Position5' then PositionCbo.ItemIndex := 4;
-    if ConObj.Position = 'Index-Position6' then PositionCbo.ItemIndex := 5;
-    if ConObj.Position = 'Category-Position1' then PositionCbo.ItemIndex := 6;
-    if ConObj.Position = 'Category-Position2' then PositionCbo.ItemIndex := 7;
-    if ConObj.Position = 'Article-Position1' then PositionCbo.ItemIndex:=8;
-    if ConObj.Position = 'Article-Position2' then PositionCbo.ItemIndex:=9;
   end;
-end;
 end;
 
 procedure TfAdsForm.SaveBtnClick(Sender: TObject);
@@ -202,12 +217,12 @@ begin
   aTask.Start;
   BGProcess.Visible := True;
   ProcessLabelAnimate.Enabled := True;
-//ProcessContentful;
+  // ProcessContentful;
 end;
 
 procedure TfAdsForm.UploadPhotoClick(Sender: TObject);
 begin
-UploadType:='photo';
+  UploadType := 'photo';
   if OpenDialogAds.Execute then
     if FileExists(OpenDialogAds.FileName) then
     begin
@@ -216,7 +231,7 @@ UploadType:='photo';
       checkSizeImg.LoadFromFile(OpenDialogAds.FileName);
       if checkSizeImg.Width > ImageWidthLimit then
       begin
-        ShowMessage('Image Max Width '+ImageWidthLimit.ToString+' px.');
+        ShowMessage('Image Max Width ' + ImageWidthLimit.ToString + ' px.');
         exit
       end;
       aAdsImage := OpenDialogAds.FileName;
@@ -227,7 +242,7 @@ UploadType:='photo';
           delAdsImageId := AdsImageId;
           AdsImageId := '';
         end;
-        PreviewImage.Visible:=True;
+        PreviewImage.Visible := True;
       end
       else
       begin
@@ -243,7 +258,7 @@ end;
 
 procedure TfAdsForm.ButtonVdoClick(Sender: TObject);
 begin
-  UploadType:='video';
+  UploadType := 'video';
   if OpenDialogAdsVideo.Execute then
     if FileExists(OpenDialogAdsVideo.FileName) then
     begin
@@ -256,7 +271,7 @@ begin
           delAdsImageId := AdsImageId;
           AdsImageId := '';
         end;
-        PreviewImage.Visible:=False;
+        PreviewImage.Visible := False;
       end
       else
       begin
@@ -276,23 +291,23 @@ var
   sYear, sMonth, sDay, sHour, sMinute, sSecond, sMillisecond: Word;
   eYear, eMonth, eDay, eHour, eMinute, eSecond, eMillisecond: Word;
 begin
-  //Create Ads Start Date
+  // Create Ads Start Date
   sYear := StrToInt(Copy(AdsstartdateTxt.Text, 7, 4));
   sMonth := StrToInt(Copy(AdsstartdateTxt.Text, 4, 2));
   sDay := StrToInt(Copy(AdsstartdateTxt.Text, 1, 2));
-  sHour := FormatDateTime('hh',AdsstarttimeTxt.DateTime).ToInteger;
-  sMinute := FormatDateTime('nn',AdsstarttimeTxt.DateTime).ToInteger;
+  sHour := FormatDateTime('hh', AdsstarttimeTxt.DateTime).ToInteger;
+  sMinute := FormatDateTime('nn', AdsstarttimeTxt.DateTime).ToInteger;
   sSecond := 00;
   sMillisecond := Round(0000);
   var
   ScheduleDateTime := EncodeDateTime(sYear, sMonth, sDay, sHour, sMinute,
     sSecond, sMillisecond);
-  //Create Ads End Date
+  // Create Ads End Date
   eYear := StrToInt(Copy(AdsenddateTxt.Text, 7, 4));
   eMonth := StrToInt(Copy(AdsenddateTxt.Text, 4, 2));
   eDay := StrToInt(Copy(AdsenddateTxt.Text, 1, 2));
-  eHour := FormatDateTime('hh',AdsstarttimeTxt.DateTime).ToInteger;
-  eMinute := FormatDateTime('nn',AdsstarttimeTxt.DateTime).ToInteger;
+  eHour := FormatDateTime('hh', AdsstarttimeTxt.DateTime).ToInteger;
+  eMinute := FormatDateTime('nn', AdsstarttimeTxt.DateTime).ToInteger;
   eSecond := 00;
   eMillisecond := Round(0000);
   var
@@ -319,45 +334,65 @@ begin
     ContentObj.AClick := AClick;
     ContentObj.Ratio := Ratio;
     ContentObj.AcLog := AcLog;
-    ContentObj.Adsstart := Concat(FormatDateTime('yyyy-mm-dd',AdsstartdateTxt.DateTime),'T',FormatDateTime('hh:nn',AdsstarttimeTxt.DateTime));
-    ContentObj.Adsend := Concat(FormatDateTime('yyyy-mm-dd',AdsenddateTxt.DateTime),'T',FormatDateTime('hh:nn',AdsendtimeTxt.DateTime));
+    ContentObj.Adsstart :=
+      Concat(FormatDateTime('yyyy-mm-dd', AdsstartdateTxt.DateTime), 'T',
+      FormatDateTime('hh:nn', AdsstarttimeTxt.DateTime));
+    ContentObj.Adsend := Concat(FormatDateTime('yyyy-mm-dd',
+      AdsenddateTxt.DateTime), 'T', FormatDateTime('hh:nn',
+      AdsendtimeTxt.DateTime));
     if TypeCbo.Selected.Text = 'Photo' then
     begin
-      if AdsImageId <> '' then ContentObj.AdsmediaId := AdsImageId;
-      if aAdsImage <> '' then ContentObj.AdsmediaId := 'addid';
+      if AdsImageId <> '' then
+        ContentObj.AdsmediaId := AdsImageId;
+      if aAdsImage <> '' then
+        ContentObj.AdsmediaId := 'addid';
     end
     else
     begin
-      if AdsVdoId <> '' then ContentObj.AdsmediaId := AdsVdoId;
-      if aAdsVdo <> '' then ContentObj.AdsmediaId := 'addid';
+      if AdsVdoId <> '' then
+        ContentObj.AdsmediaId := AdsVdoId;
+      if aAdsVdo <> '' then
+        ContentObj.AdsmediaId := 'addid';
     end;
     var
     ValidateResult := ContentObj.Validate;
-//    // verify pass
+    // // verify pass
     if ValidateResult.FindValue('result').Value.ToBoolean then
     begin
-      //new file delete old file
-      var ImgObj := MContentfulImage.Create(CmaToken, SpaceId, Environment);
-      var VideoObj := MContentfulVideo.Create(CmaToken, SpaceId, Environment);
+      // new file delete old file
+      var
+      ImgObj := MContentfulImage.Create(CmaToken, SpaceId, Environment);
+      var
+      VideoObj := MContentfulVideo.Create(CmaToken, SpaceId, Environment);
       if delAdsImageId <> '' then
       begin
+        ImgObj.Id := delAdsImageId;
+        ImgObj.Version := AdsImageVersion;
         if PublishStatus then
         begin
-          AdsImageVersion:=ImgObj.UnPublishAssets(delAdsImageId, AdsImageVersion);
+          ImgObj.UnPublish;
         end;
-        ImgObj.DeleteImage(delAdsImageId, AdsImageVersion);
+        ImgObj.DeleteImage;
       end;
       if delAdsVdoId <> '' then
       begin
+        VideoObj.Id := delAdsVdoId;
+        VideoObj.Version := AdsVdoVersion;
         if PublishStatus then
         begin
-          AdsVdoVersion:=VideoObj.UnPublishAssets(delAdsVdoId, AdsVdoVersion);
+          VideoObj.UnPublish;
         end;
-        VideoObj.DeleteVdo(delAdsVdoId, AdsVdoVersion);
+        VideoObj.DeleteVdo;
       end;
+        var
+        uploadresult := False;
       if TypeCbo.Selected.Text = 'Photo' then
       begin
-        if AdsImageId <> '' then ContentObj.AdsmediaId := AdsImageId;
+        if AdsImageId <> '' then
+        begin
+          ContentObj.AdsmediaId := AdsImageId;
+          uploadresult := True;
+        end;
         if aAdsImage <> '' then
         begin
           var
@@ -365,23 +400,49 @@ begin
           var
           extFile := ExtractFileExt(aAdsImage);
           FileName := StringReplace(FileName, extFile, '', [rfReplaceAll]);
-          var
-          uploadId := ImgObj.Upload(aAdsImage, FileName, extFile);
-          var
-          casset := ImgObj.CreateAssets(uploadId, FileName, FileName, extFile);
-          var
-          newAssetId := casset.FindValue('sys.id').Value;
-          var
-          proresult := ImgObj.ProcessAssets(newAssetId);
-          var assetVersion := ImgObj.GetVersionById(newAssetId);
-          var ContentImageVersion := ImgObj.PublishAssets(newAssetId,
-              assetVersion);
-          ContentObj.AdsmediaId := newAssetId;
+          if ImgObj.Upload(aAdsImage, extFile) then
+          begin
+            var
+            casset := ImgObj.CreateAsset(FileName, FileName, FileName);
+            if casset.FindValue('status').Value.ToBoolean then
+            begin
+              if ImgObj.ProcessAssets then
+              begin
+                var
+                assetVersion := ImgObj.GetVersion;
+                if ImgObj.Publish then
+                begin
+                  ContentObj.AdsmediaId := ImgObj.Id;
+                  uploadresult := True;
+                end
+                else
+                begin
+                  ShowMessage('Can not publish photo.');
+                end;
+              end
+              else
+              begin
+                ShowMessage('Can not process photo.');
+              end;
+            end
+            else
+            begin
+              ShowMessage('Can not create photo.');
+            end;
+          end
+          else
+          begin
+            ShowMessage('Can not upload photo.');
+          end;
         end;
       end
       else
       begin
-        if AdsVdoId <> '' then ContentObj.AdsmediaId := AdsVdoId;
+        if AdsVdoId <> '' then
+        begin
+          ContentObj.AdsmediaId := AdsVdoId;
+          uploadresult := True;
+        end;
         if aAdsVdo <> '' then
         begin
           var
@@ -389,22 +450,55 @@ begin
           var
           extFile := ExtractFileExt(aAdsVdo);
           FileName := StringReplace(FileName, extFile, '', [rfReplaceAll]);
-          var
-          uploadId := VideoObj.Upload(aAdsVdo, FileName);
-          var
-          casset := VideoObj.CreateAssets(uploadId, FileName, FileName);
-          var
-          newAssetId := casset.FindValue('sys.id').Value;
-          var assetVersion := VideoObj.GetVersionById(newAssetId);
-          var
-          proresult := VideoObj.ProcessAssets(newAssetId);
-          var ContentImageVersion := VideoObj.PublishAssets(newAssetId,
-              assetVersion);
-          ContentObj.AdsmediaId := newAssetId;
+          if VideoObj.Upload(aAdsVdo) then
+          begin
+            var
+            casset := VideoObj.CreateAssets(FileName, FileName);
+            if casset.FindValue('status').Value.ToBoolean then
+            begin
+              if VideoObj.ProcessAssets then
+              begin
+                if VideoObj.GetVersion then
+                begin
+                  if VideoObj.Publish then
+                  begin
+                    ContentObj.AdsmediaId := VideoObj.Id;
+                    uploadresult := True;
+                  end
+                  else
+                  begin
+                    ShowMessage('Can not publish video.');
+                  end;
+                end
+                else
+                begin
+                  ShowMessage('Can not get version video.');
+                end;
+              end
+              else
+              begin
+                ShowMessage('Can not process video.');
+              end;
+            end
+            else
+            begin
+              ShowMessage('Can not create video.');
+            end;
+          end
+          else
+          begin
+            ShowMessage('Can not upload video.');
+          end;
         end;
       end;
       ImgObj.Free;
       VideoObj.Free;
+      if uploadresult <> True then
+      begin
+          BGProcess.Visible := False;
+          ProcessLabelAnimate.Enabled := False;
+          exit;
+      end;
       if AdsId = '' then
       begin
         // save
@@ -413,99 +507,57 @@ begin
       else
       begin
         // update
-        ContentObj.id := AdsId;
+        ContentObj.Id := AdsId;
         ContentObj.Version := Version;
         Result := ContentObj.Update;
+        if PublishStatus then ContentObj.Unpublish;
       end;
       if Result.FindValue('status').Value.ToBoolean then
       begin
-        //schedule ads
-        //get version
-        ContentObj.Version := Result.FindValue('result.sys.version').Value.ToInteger;
-        //get content id
-        ContentObj.Id := Result.FindValue('result.sys.id').Value;
-        //create contentful schedule object
+        // schedule ads
+        // create contentful schedule object
         var
         ContentfulSchedule := TContentfulSchedule.Create(CmaToken, SpaceId,
           Environment);
-        if AdsId = '' then
+        if AdsId <> '' then
         begin
-          //Ads Start
-          //if start time more than now
-          if ScheduleDateTime > now then
-          begin
-            //set start schedule
-            var
-            resultstart := ContentfulSchedule.Save(ContentObj.Id, 'publish',
-            ScheduleDateTime);
-          end
-          else
-          begin
-            //start time less than or equal now auto publish
-            var presult := ContentObj.Publish;
-            ContentObj.Version := presult.FindValue('result.sys.version').Value.ToInteger;
-          end;
-          //Ads End
-          if ScheduleDateEndTime > now then
-          begin
-            var resultend := ContentfulSchedule.Save(ContentObj.Id, 'unpublish',
-            ScheduleDateEndTime);
-          end;
-        end
-        else
-        begin
-          //clean all schedule
-          var ScheduleList := ContentfulSchedule.GetAll(AdsId);
-          var i := 0;
+          // clean all schedule
+          var
+          ScheduleList := ContentfulSchedule.GetAll(AdsId);
+          var
+          i := 0;
           for i := 0 to ScheduleList.Count - 1 do
           begin
             var
-              ItemObject := TJSONObject(ScheduleList.Get(i));
-              var delResult := ContentfulSchedule.ScheduleCancel(AdsId,ItemObject.FindValue('sys.id').Value);
-          end;
-          //if ads is publish
-          if PublishStatus then
-          begin
-            //set only unpublish
-            //end time more than now
-            if ScheduleDateEndTime > now then
-            begin
-              //set unpublish schedule
-              var resultend := ContentfulSchedule.Save(ContentObj.Id, 'unpublish',
-              ScheduleDateEndTime);
-            end
-            else
-            begin
-              //if end time less than and equal now set unpublish
-              var unResult := ContentObj.Unpublish;
-            end;
-          end
-          else
-          begin
-            //ads not publish
-            //Ads Start
-            //if start time more than now
-            if ScheduleDateTime > now then
-            begin
-              //set start schedule
-              var
-              resultstart := ContentfulSchedule.Save(ContentObj.Id, 'publish',
-              ScheduleDateTime);
-            end
-            else
-            begin
-              //start time less than or equal now auto publish
-              var presult := ContentObj.Publish;
-              ContentObj.Version := presult.FindValue('result.sys.version').Value.ToInteger;
-            end;
-            //Ads End
-            if ScheduleDateEndTime > now then
-            begin
-              var resultend := ContentfulSchedule.Save(ContentObj.Id, 'unpublish',
-              ScheduleDateEndTime);
-            end;
+            ItemObject := TJSONObject(ScheduleList.Get(i));
+            var
+            delResult := ContentfulSchedule.ScheduleCancel(AdsId,
+              ItemObject.FindValue('sys.id').Value);
           end;
         end;
+        // Ads Start
+        // if start time more than now
+        if ScheduleDateTime > now then
+        begin
+          // set start schedule
+          var
+          resultstart := ContentfulSchedule.Save(ContentObj.Id, 'publish',
+            ScheduleDateTime);
+        end
+        else
+        begin
+          // start time less than or equal now auto publish
+          var
+          presult := ContentObj.Publish;
+        end;
+        // Ads End
+        if ScheduleDateEndTime > now then
+        begin
+          var
+          resultend := ContentfulSchedule.Save(ContentObj.Id, 'unpublish',
+            ScheduleDateEndTime);
+        end;
+
         ContentfulSchedule.Free;
         // End schedule
         ShowMessage(Result.FindValue('message').Value);
@@ -528,7 +580,8 @@ begin
       ListError := '';
       var
       ErrorArray := ValidateResult.FindValue('error') as TJSONArray;
-      var i := 0;
+      var
+      i := 0;
       for i := 0 to ErrorArray.Count - 1 do
       begin
         var

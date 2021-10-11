@@ -4,7 +4,7 @@ interface
 
 uses System.JSON,REST.Types,REST.Client,System.Classes,System.SysUtils,
 System.Hash,System.Net.HttpClient,System.Net.HttpClientComponent,FMX.Objects,
-System.Types,System.UITypes,FMX.Graphics,FMX.Types;
+System.Types,System.UITypes,FMX.Graphics,FMX.Types,Log;
 
 type
   MContentfulImage = Class
@@ -15,18 +15,20 @@ type
     PreviewImage : TBitmap;
     AssetVersion : Integer;
     ContentfulUrl : String;
+    Id,SourceId,FileExt : String;
+    Version : Integer;
+    LogObj : MLog;
     constructor Create(pCmaToken,pSpaceId,pEnvironment:String);
-    function Upload(FilePath,Filename,FileExt:String):String;
-    function CreateAssets(UploadId,Title,Filename,Filetype:String):TJSONObject;
-    function UpdateAssets(UploadId,ImageId,Title,Filename,Filetype:String;Version:Integer):TJSONObject;
-    function ProcessAssets(AssetId:String):Boolean;
+    function Upload(pFilePath,pFileExt:String):Boolean;
+    function CreateAsset(pTitle,pDescription,pFilename:WideString):TJSONObject;
+    function UpdateAsset(pId,pTitle,pDescription,pFilename:WideString;pVersion:Integer):TJSONObject;
+    function ProcessAssets:Boolean;
     function LoadImage(url:String):TMemoryStream;
-    function GetById(assetid:String):TMemoryStream;
-    function GetVersionById(assetid:String):Integer;
-    function PublishAssets(assetId:String;version:Integer):Integer;
-    function UnPublishAssets(assetId:String;version:Integer):Integer;
-    procedure DeleteImage(assetId:String;version:Integer);
-
+    function GetById(pId:String):TMemoryStream;
+    function GetVersion:Boolean;
+    function Publish:Boolean;
+    function UnPublish:Boolean;
+    procedure DeleteImage;
   End;
 
 implementation
@@ -37,111 +39,112 @@ CmaToken:=pCmaToken;
 SpaceId:=pSpaceId;
 Environment:=pEnvironment;
 ContentfulUrl := Concat('https://api.contentful.com/spaces/',SpaceId,'/environments/',pEnvironment);
+LogObj := MLog.Create;
 end;
 
-function MContentfulImage.UpdateAssets(UploadId,ImageId,Title,
-  Filename, Filetype: String; Version: Integer): TJSONObject;
+function MContentfulImage.UpdateAsset(pId,pTitle,pDescription,pFilename:WideString;pVersion:Integer): TJSONObject;
 begin
-var ResultRest:TJSONObject;
 begin
+    var pResult := TJSONObject.Create;
     var today := Now;
-    if (Filetype = '.jpg') OR (Filetype = '.jpeg') then
-    begin
-      Filetype := 'image/jpeg';
-    end;
-    if Filetype = '.png' then
-    begin
-      Filetype := 'image/png';
-    end;
-    ResultRest := TJSONObject.Create;
-    var newFilename := Concat(Filename,FormatDateTime('dd',today),
+    var newFilename := Concat(pFilename,FormatDateTime('dd',today),
     FormatDateTime('mm',today),FormatDateTime('yyyy',today),
     FormatDateTime('hh',today),FormatDateTime('nn',today),System.Hash.THash.GetRandomString(5));
     var SysJson := TJSONObject.Create;
     SysJson.AddPair('type','Link');
     SysJson.AddPair('linkType','Upload');
-    SysJson.AddPair('id',UploadId);
+    SysJson.AddPair('id',SourceId);
     var UploadFormJson := TJSONObject.Create;
     UploadFormJson.AddPair('sys',SysJson);
     var LangFileJson := TJSONObject.Create;
-    LangFileJson.AddPair('contentType',Filetype);
+    LangFileJson.AddPair('contentType',FileExt);
     LangFileJson.AddPair('fileName',newFilename);
     LangFileJson.AddPair('uploadFrom',UploadFormJson);
+    //title
     var LangTitleJson := TJSONObject.Create;
-    LangTitleJson.AddPair('en-US',Title);
+    LangTitleJson.AddPair('en-US',pTitle);
+    //caption
+    var LangDesJson := TJSONObject.Create;
+    LangDesJson.AddPair('en-US',pDescription);
     var FileJson := TJSONObject.Create;
     FileJson.AddPair('en-US',LangFileJson);
     var FieldsJson := TJSONObject.Create;
     FieldsJson.AddPair('title',LangTitleJson);
+    FieldsJson.AddPair('description',LangDesJson);
     FieldsJson.AddPair('file',FileJson);
     var BodyJson := TJSONObject.Create;
     BodyJson.AddPair('fields',FieldsJson);
 
     var CAClient := TRESTClient.Create(nil);
     var CARequest := TRESTRequest.Create(nil);
-    try
     CARequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
-    CARequest.AddParameter('X-Contentful-Version',Version.ToString,pkHTTPHEADER,[poDoNotEncode]);
+    CARequest.AddParameter('X-Contentful-Version',pVersion.ToString,pkHTTPHEADER,[poDoNotEncode]);
     CARequest.AddParameter('Content-Type','application/vnd.contentful.management.v1+json',pkHTTPHEADER,[poDoNotEncode]);
     CARequest.AddBody(BodyJson.ToString, ctAPPLICATION_JSON);
     // New Item
     // กำหนด url ของ api
-    CAClient.BaseURL := Concat(ContentfulUrl,'/assets/',ImageId);
+    CAClient.BaseURL := Concat(ContentfulUrl,'/assets/',pId);
     // assige client ให้ request
     CARequest.Client := CAClient;
     // set parameter rmGET,rmPOST,rmPUT,rmDELETE
     CARequest.Method := rmPUT;
     // เรียก api
+    try
     CARequest.Execute;
-    if (CARequest.Response.StatusCode = 201) then
+    if (CARequest.Response.StatusCode = 200) then
     begin
-      ResultRest := CARequest.Response.JSONValue as TJSONObject;
+      pResult := CARequest.Response.JSONValue as TJSONObject;
+      pResult.AddPair('status', TJSONBool.Create(True));
+      Id := pResult.FindValue('sys.id').Value;
+      Version := pResult.FindValue('sys.version').Value.ToInteger;
+    end
+    else
+    begin
+      pResult.AddPair('result', CARequest.Response.JSONText);
+      pResult.AddPair('body', BodyJson.ToJSON());
+      pResult.AddPair('status', TJSONBool.Create(False));
     end;
     finally
-//      CAClient.Free;
-//      CARequest.Free;
+      CAClient.Free;
     end;
-    Result := ResultRest;
+    Result := pResult;
 end;
 end;
 
-function MContentfulImage.Upload(FilePath,Filename,FileExt:String): String;
-var UploadId : String;
+function MContentfulImage.Upload(pFilePath,pFileExt:String): Boolean;
 begin
-
+  var pResult := False;
   var OriginImg:= TImage.Create(nil);
-  OriginImg.Bitmap.LoadFromFile(FilePath);
-//  var MyRect := TRectF.Create( 0, 0, OriginImg.Bitmap.Width-10, OriginImg.Bitmap.Height-10);
+  OriginImg.Bitmap.LoadFromFile(pFilePath);
+//  var MyRect := TRectF.Create( 0, 0, OriginImg.Bitmap.Width-10, OriginImg.Bitmap.Height-5);
 //  with OriginImg.Bitmap.Canvas do
 //  begin
 //        BeginScene;
 //        Fill.Color:=TAlphaColors.White;
-//        Font.Size:=Int(OriginImg.Bitmap.Height*5)/100;
+//        Font.Size:=Int(OriginImg.Bitmap.Height*2)/100;
 //        {$IFDEF MACOS}
-//        FillText(MyRect, 'Copyright © spacebar', false, 100,
+//        FillText(MyRect, 'Copyright © spacebar', false, 50,
 //        [TFillTextFlag.RightToLeft], TTextAlign.Trailing, TTextAlign.Trailing);
 //        {$ENDIF}
 //        {$IFDEF MSWINDOWS}
-//          FillText(MyRect, 'Copyright © spacebar', false, 100,
+//          FillText(MyRect, 'Copyright © spacebar', false, 50,
 //        [TFillTextFlag.RightToLeft], TTextAlign.Leading, TTextAlign.Trailing);
 //        {$ENDIF}
 //        EndScene
 //  end;
   var LStream := TMemoryStream.Create;
   OriginImg.Bitmap.SaveToStream(LStream);
-  PreviewImage := OriginImg.Bitmap;
   var CClient := TRESTClient.Create(nil);
   var CRequest := TRESTRequest.Create(nil);
-  try
     LStream.Position := 0;
     CRequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
     CRequest.AddParameter('Content-Type','application/octet-stream',pkHTTPHEADER,[poDoNotEncode]);
-    if (LowerCase(FileExt) = '.jpg') OR (LowerCase(FileExt) = '.jpeg') then
+    if (LowerCase(pFileExt) = '.jpg') OR (LowerCase(pFileExt) = '.jpeg') then
     begin
       CRequest.AddBody(LStream,TRESTContentType.ctIMAGE_JPEG);
       FileExt := 'image/jpeg';
     end;
-    if LowerCase(FileExt) = '.png' then
+    if LowerCase(pFileExt) = '.png' then
     begin
       CRequest.AddBody(LStream,TRESTContentType.ctIMAGE_PNG);
       FileExt := 'image/png';
@@ -156,52 +159,50 @@ begin
     CRequest.ConnectTimeout := 300000;
     CRequest.Timeout := 300000;
     // เรียก api
+    try
     CRequest.Execute;
     if (CRequest.Response.StatusCode = 201) then
     begin
       var RestResult := CRequest.Response.JSONValue as TJSONObject;
-      UploadId := RestResult.FindValue('sys.id').Value;
+      SourceId := RestResult.FindValue('sys.id').Value;
+      pResult := True;
     end;
   finally
     CClient.Free;
-    CRequest.Free;
     LStream.Free;
   end;
-  Result := UploadId;
+  Result := pResult;
 end;
 
-function MContentfulImage.CreateAssets(UploadId,Title,Filename,Filetype:String):TJSONObject;
-var ResultRest:TJSONObject;
+function MContentfulImage.CreateAsset(pTitle,pDescription,pFilename:WideString):TJSONObject;
 begin
     var today := Now;
-    if (Filetype = '.jpg') OR (Filetype = '.jpeg') then
-    begin
-      Filetype := 'image/jpeg';
-    end;
-    if Filetype = '.png' then
-    begin
-      Filetype := 'image/png';
-    end;
-    ResultRest := TJSONObject.Create;
-    var newFilename := Concat(Filename,FormatDateTime('dd',today),
+    var pResult := TJSONObject.Create;
+    var newFilename := Concat(pFilename,FormatDateTime('dd',today),
     FormatDateTime('mm',today),FormatDateTime('yyyy',today),
     FormatDateTime('hh',today),FormatDateTime('nn',today),System.Hash.THash.GetRandomString(5));
     var SysJson := TJSONObject.Create;
     SysJson.AddPair('type','Link');
     SysJson.AddPair('linkType','Upload');
-    SysJson.AddPair('id',UploadId);
+    SysJson.AddPair('id',SourceId);
     var UploadFormJson := TJSONObject.Create;
     UploadFormJson.AddPair('sys',SysJson);
     var LangFileJson := TJSONObject.Create;
-    LangFileJson.AddPair('contentType',Filetype);
+    LangFileJson.AddPair('contentType',FileExt);
     LangFileJson.AddPair('fileName',newFilename);
     LangFileJson.AddPair('uploadFrom',UploadFormJson);
+    //Title
     var LangTitleJson := TJSONObject.Create;
-    LangTitleJson.AddPair('en-US',Title);
+    LangTitleJson.AddPair('en-US',pTitle);
+    //Description
+    var LangDesJson := TJSONObject.Create;
+    LangDesJson.AddPair('en-US',pDescription);
+    //File
     var FileJson := TJSONObject.Create;
     FileJson.AddPair('en-US',LangFileJson);
     var FieldsJson := TJSONObject.Create;
     FieldsJson.AddPair('title',LangTitleJson);
+    FieldsJson.AddPair('description',LangDesJson);
     FieldsJson.AddPair('file',FileJson);
     var BodyJson := TJSONObject.Create;
     BodyJson.AddPair('fields',FieldsJson);
@@ -209,7 +210,7 @@ begin
     var sysValue := TJSONObject.Create;
     sysValue.AddPair('type','Link');
     sysValue.AddPair('linkType','Tag');
-    sysValue.AddPair('id','_ads');
+    sysValue.AddPair('id','_imgcontent');
     var tagItem := TJSONObject.Create;
     tagItem.AddPair('sys',sysValue);
     var tagArray := TJSONArray.Create;
@@ -220,7 +221,6 @@ begin
 
     var CAClient := TRESTClient.Create(nil);
     var CARequest := TRESTRequest.Create(nil);
-    try
     CARequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
     CARequest.AddParameter('Content-Type','application/vnd.contentful.management.v1+json',pkHTTPHEADER,[poDoNotEncode]);
     CARequest.AddBody(BodyJson.ToString, ctAPPLICATION_JSON);
@@ -231,73 +231,66 @@ begin
     CARequest.Client := CAClient;
     // set parameter rmGET,rmPOST,rmPUT,rmDELETE
     CARequest.Method := rmPOST;
+    CARequest.ConnectTimeout := 300000;
+    CARequest.Timeout := 300000;
     // เรียก api
+    try
     CARequest.Execute;
     if (CARequest.Response.StatusCode = 201) then
     begin
-      ResultRest := CARequest.Response.JSONValue as TJSONObject;
+      pResult := CARequest.Response.JSONValue as TJSONObject;
+      pResult.AddPair('status', TJSONBool.Create(True));
+      Id := pResult.FindValue('sys.id').Value;
+      Version := pResult.FindValue('sys.version').Value.ToInteger;
+      LogObj.AddLog(Concat(Id,' create assets version ',pResult.FindValue('sys.version').Value));
     end
     else
     begin
-      ResultRest := TJSONObject.Create;
-      ResultRest.AddPair('result',CARequest.Response.JSONText);
-      ResultRest.AddPair('body',BodyJson.ToJSON());
+      pResult.AddPair('result', CARequest.Response.JSONText);
+      pResult.AddPair('body', BodyJson.ToJSON());
+      pResult.AddPair('status', TJSONBool.Create(False));
     end;
     finally
-//      CAClient.Free;
-//      CARequest.Free;
+      CAClient.Free;
     end;
-    Result := ResultRest;
+    Result := pResult;
 end;
 
-procedure MContentfulImage.DeleteImage(assetId: String;version : Integer);
+procedure MContentfulImage.DeleteImage;
 begin
     var CPAClient := TRESTClient.Create(nil);
     var CPARequest := TRESTRequest.Create(nil);
     CPARequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
-    CPARequest.AddParameter('X-Contentful-Version',version.ToString,pkHTTPHEADER,[poDoNotEncode]);
-    // New Item
+    CPARequest.AddParameter('X-Contentful-Version',Version.ToString,pkHTTPHEADER,[poDoNotEncode]);
     // กำหนด url ของ api
-    CPAClient.BaseURL := Concat(ContentfulUrl,'/assets/',assetId,'/published');
+    CPAClient.BaseURL := Concat(ContentfulUrl,'/assets/',Id);
     // assige client ให้ request
     CPARequest.Client := CPAClient;
     // set parameter rmGET,rmPOST,rmPUT,rmDELETE
     CPARequest.Method := rmDELETE;
       // เรียก api
+      try
     CPARequest.Execute;
-    if CPARequest.Response.StatusCode = 200 then
-    begin
-      version := version + 1;
-    end;
-    var DClient := TRESTClient.Create(nil);
-    var DRequest := TRESTRequest.Create(nil);
-    DRequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
-    DRequest.AddParameter('X-Contentful-Version',version.ToString,pkHTTPHEADER,[poDoNotEncode]);
-    // New Item
-    // กำหนด url ของ api
-    DClient.BaseURL := Concat(ContentfulUrl,'/assets/',assetId);
-    // assige client ให้ request
-    DRequest.Client := DClient;
-    // set parameter rmGET,rmPOST,rmPUT,rmDELETE
-    DRequest.Method := rmDELETE;
-      // เรียก api
-    DRequest.Execute;
+      finally
+      CPAClient.Free;
+      end;
 end;
 
-function MContentfulImage.GetById(assetid: String):TMemoryStream;
+function MContentfulImage.GetById(pId: String):TMemoryStream;
 begin
     var CPAClient := TRESTClient.Create(nil);
     var CPARequest := TRESTRequest.Create(nil);
     CPARequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
     // New Item
     // กำหนด url ของ api
-    CPAClient.BaseURL := Concat(ContentfulUrl,'/assets/',AssetId);
+    CPAClient.BaseURL := Concat(ContentfulUrl,'/assets/',pId);
     // assige client ให้ request
     CPARequest.Client := CPAClient;
     // set parameter rmGET,rmPOST,rmPUT,rmDELETE
     CPARequest.Method := rmGET;
     var MS := TMemoryStream.Create;
       // เรียก api
+      try
     CPARequest.Execute;
     var imgResult := CPARequest.Response.JSONValue as TJSONObject;
     AssetVersion := imgResult.FindValue('sys.version').Value.ToInteger;
@@ -308,104 +301,146 @@ begin
     NetHTTP.ConnectionTimeout := 300000;
     NetHTTP.Get(Concat('https:',imgResult.FindValue('fields.file.en-US.url').Value,'?w=150'), MS);
     MS.Seek(0, soFromBeginning);
+      finally
+     CPAClient.Free;
+      end;
     Result := MS;
 end;
 
-function MContentfulImage.GetVersionById(assetid: String): Integer;
+function MContentfulImage.GetVersion:Boolean;
 begin
+  var pResult := False;
     var CPAClient := TRESTClient.Create(nil);
     var CPARequest := TRESTRequest.Create(nil);
     CPARequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
     // New Item
     // กำหนด url ของ api
-    CPAClient.BaseURL := Concat(ContentfulUrl,'/assets/',AssetId);
+    CPAClient.BaseURL := Concat(ContentfulUrl,'/assets/',Id);
     // assige client ให้ request
     CPARequest.Client := CPAClient;
     // set parameter rmGET,rmPOST,rmPUT,rmDELETE
     CPARequest.Method := rmGET;
-    var MS := TMemoryStream.Create;
+    CPARequest.ConnectTimeout := 300000;
+    CPARequest.Timeout := 300000;
+//    var MS := TMemoryStream.Create;
       // เรียก api
+      try
     CPARequest.Execute;
-    var imgResult := CPARequest.Response.JSONValue as TJSONObject;
-    Result := imgResult.FindValue('sys.version').Value.ToInteger;
-end;
-
-function MContentfulImage.ProcessAssets(AssetId:String):Boolean;
-var ResultRest:Boolean;
-begin
-    var CPAClient := TRESTClient.Create(nil);
-    var CPARequest := TRESTRequest.Create(nil);
-    CPARequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
-    CPARequest.AddParameter('X-Contentful-Version','1',pkHTTPHEADER,[poDoNotEncode]);
-    // New Item
-    // กำหนด url ของ api
-    CPAClient.BaseURL := Concat(ContentfulUrl,'/assets/',AssetId,'/files/en-US/process');
-    // assige client ให้ request
-    CPARequest.Client := CPAClient;
-    // set parameter rmGET,rmPOST,rmPUT,rmDELETE
-    CPARequest.Method := rmPUT;
-    try
-      // เรียก api
-      CPARequest.Execute;
-      if (CPARequest.Response.StatusCode = 204) then
-      begin
-        ResultRest:=True;
-      end
-      else
-      begin
-        ResultRest:=False;
+    if CPARequest.Response.StatusCode = 200 then
+    begin
+      var imgResult := CPARequest.Response.JSONValue as TJSONObject;
+      Version := imgResult.FindValue('sys.version').Value.ToInteger;
+      LogObj.AddLog(Concat(Id,' get version version ',imgResult.FindValue('sys.version').Value));
+      pResult:= True;
+    end;
+      finally
+       CPAClient.Free;
       end;
-    finally
-    end;
-    Result := ResultRest;
+    Result :=  pResult;
 end;
 
-function MContentfulImage.PublishAssets(assetId: String; version: Integer):Integer;
+function MContentfulImage.ProcessAssets:Boolean;
 begin
-    var CPAClient := TRESTClient.Create(nil);
-    var CPARequest := TRESTRequest.Create(nil);
-    CPARequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
-    CPARequest.AddParameter('X-Contentful-Version',version.ToString,pkHTTPHEADER,[poDoNotEncode]);
-    // กำหนด url ของ api
-    CPAClient.BaseURL := Concat(ContentfulUrl,'/assets/',AssetId,'/published');
-    // assige client ให้ request
-    CPARequest.Client := CPAClient;
-    // set parameter rmGET,rmPOST,rmPUT,rmDELETE
-    CPARequest.Method := rmPUT;
+var
+  pResult := False;
+  var
+  CPAClient := TRESTClient.Create(nil);
+  var
+  CPARequest := TRESTRequest.Create(nil);
+  CPARequest.AddParameter('Authorization', 'Bearer ' + CmaToken, pkHTTPHEADER,
+    [poDoNotEncode]);
+  CPARequest.AddParameter('X-Contentful-Version', Version.ToString, pkHTTPHEADER,
+    [poDoNotEncode]);
+  // New Item
+  // กำหนด url ของ api
+  CPAClient.BaseURL := Concat(ContentfulUrl, '/assets/', Id,
+    '/files/en-US/process');
+  // assige client ให้ request
+  CPARequest.Client := CPAClient;
+  // set parameter rmGET,rmPOST,rmPUT,rmDELETE
+  CPARequest.Method := rmPUT;
+  CPARequest.ConnectTimeout := 300000;
+  CPARequest.Timeout := 300000;
+  try
     // เรียก api
+    CPARequest.Execute;
+    if (CPARequest.Response.StatusCode = 204) then
+    begin
+      pResult := True;
+      LogObj.AddLog(Concat(Id,' process complete.'));
+    end;
+  finally
+    CPAClient.Free;
+  end;
+  sleep(1000);
+  Result := pResult;
+end;
+
+function MContentfulImage.Publish:Boolean;
+begin
+  LogObj.AddLog(Concat(Id,' publish version ', Version.ToString));
+  var
+  pResult := False;
+  var
+  CPAClient := TRESTClient.Create(nil);
+  var
+  CPARequest := TRESTRequest.Create(nil);
+  CPARequest.AddParameter('Authorization', 'Bearer ' + CmaToken, pkHTTPHEADER,
+    [poDoNotEncode]);
+  CPARequest.AddParameter('X-Contentful-Version', Version.ToString,
+    pkHTTPHEADER, [poDoNotEncode]);
+  // กำหนด url ของ api
+  CPAClient.BaseURL := Concat(ContentfulUrl, '/assets/', Id, '/published');
+  // assige client ให้ request
+  CPARequest.Client := CPAClient;
+  // set parameter rmGET,rmPOST,rmPUT,rmDELETE
+  CPARequest.Method := rmPUT;
+  // เรียก api
+  try
     CPARequest.Execute;
     if CPARequest.Response.StatusCode = 200 then
     begin
-      Result :=  version+1;
-    end
-    else
-    begin
-      Result := version;
+      pResult := True;
+      var pRestResult := CPARequest.Response.JSONValue as TJSONObject;
+      Version := pRestResult.FindValue('sys.version').Value.ToInteger;
     end;
+  finally
+    CPAClient.Free;
+  end;
+  Result := pResult;
 end;
 
-function MContentfulImage.UnPublishAssets(assetId: String; version: Integer):Integer;
+function MContentfulImage.UnPublish:Boolean;
 begin
-    var CPAClient := TRESTClient.Create(nil);
-    var CPARequest := TRESTRequest.Create(nil);
-    CPARequest.AddParameter('Authorization','Bearer '+CmaToken,pkHTTPHEADER,[poDoNotEncode]);
-    CPARequest.AddParameter('X-Contentful-Version',version.ToString,pkHTTPHEADER,[poDoNotEncode]);
-    // กำหนด url ของ api
-    CPAClient.BaseURL := Concat(ContentfulUrl,'/assets/',AssetId,'/published');
-    // assige client ให้ request
-    CPARequest.Client := CPAClient;
-    // set parameter rmGET,rmPOST,rmPUT,rmDELETE
-    CPARequest.Method := rmDELETE;
-    // เรียก api
+  var
+  pResult := False;
+  var
+  CPAClient := TRESTClient.Create(nil);
+  var
+  CPARequest := TRESTRequest.Create(nil);
+  CPARequest.AddParameter('Authorization', 'Bearer ' + CmaToken, pkHTTPHEADER,
+    [poDoNotEncode]);
+  CPARequest.AddParameter('X-Contentful-Version', Version.ToString,
+    pkHTTPHEADER, [poDoNotEncode]);
+  // กำหนด url ของ api
+  CPAClient.BaseURL := Concat(ContentfulUrl, '/assets/', Id, '/published');
+  // assige client ให้ request
+  CPARequest.Client := CPAClient;
+  // set parameter rmGET,rmPOST,rmPUT,rmDELETE
+  CPARequest.Method := rmDELETE;
+  // เรียก api
+  try
     CPARequest.Execute;
     if CPARequest.Response.StatusCode = 200 then
     begin
-      Result :=  version+1;
-    end
-    else
-    begin
-      Result := version;
+      pResult := True;
+      var pRestResult := CPARequest.Response.JSONValue as TJSONObject;
+      Version := pRestResult.FindValue('sys.version').Value.ToInteger;
     end;
+  finally
+    CPAClient.Free;
+  end;
+  Result := pResult;
 end;
 
 function MContentfulImage.LoadImage(url: string): TMemoryStream;
@@ -414,8 +449,12 @@ begin
     var NetClient := TNetHTTPClient.Create(Nil);
     var NetHTTP := TNetHTTPRequest.Create(Nil);
     NetHTTP.Client := NetClient;
+    try
     NetHTTP.Get(url, MS);
     MS.Seek(0, soFromBeginning);
+    finally
+      NetHTTP.Free;
+    end;
     Result := MS;
 end;
 

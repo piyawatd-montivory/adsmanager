@@ -23,11 +23,9 @@ type
     Line1: TLine;
     ToolbarLayout: TLayout;
     NewBtn: TButton;
-    Layout9: TLayout;
     Image10: TImage;
     Label9: TLabel;
     ArchiveBtn: TButton;
-    Layout1: TLayout;
     Image1: TImage;
     ArchiveLabel: TLabel;
     SearchLabel: TLabel;
@@ -86,6 +84,18 @@ type
     adsenddesc: TListBoxItem;
     FDMAdsadsstart: TWideStringField;
     FDMAdsadsend: TWideStringField;
+    PositionCbo: TComboBox;
+    IndexPosition1: TListBoxItem;
+    IndexPosition2: TListBoxItem;
+    IndexPosition3: TListBoxItem;
+    IndexPosition4: TListBoxItem;
+    IndexPosition5: TListBoxItem;
+    IndexPosition6: TListBoxItem;
+    CategoryPosition1: TListBoxItem;
+    CategoryPosition2: TListBoxItem;
+    ArticlePosition1: TListBoxItem;
+    ArticlePosition2: TListBoxItem;
+    AllPosition: TListBoxItem;
     procedure NewBtnClick(Sender: TObject);
     procedure StatusCboChange(Sender: TObject);
     procedure SortComboChange(Sender: TObject);
@@ -93,6 +103,7 @@ type
       const Row: Integer);
     procedure ContentGridCellClick(const Column: TColumn; const Row: Integer);
     procedure ArchiveBtnClick(Sender: TObject);
+    procedure PositionCboChange(Sender: TObject);
   private
     { Private declarations }
     procedure ChangePage(ChangeType: String);
@@ -126,15 +137,17 @@ begin
           FDMAds.First;
           while not FDMAds.Eof do
           begin
-            if FDMAds.FieldValues['status'] = 'Draft' then
+            if FDMAds.FieldValues['selcontent'] then
             begin
-              if FDMAds.FieldValues['schedule'] = False then
+              ContentObj.Id := FDMAds.FieldValues['id'];
+              ContentObj.Version := FDMAds.FieldValues['version'];
+              if FDMAds.FieldValues['status'] = 'Published' then
               begin
-                ContentObj.Id := FDMAds.FieldValues['id'];
-                ContentObj.Version := FDMAds.FieldValues['version'];
-                var
-                delResult := ContentObj.Archive;
+                ContentObj.Unpublish;
               end;
+              ContentObj.DeleteSchedule;
+              var
+              delResult := ContentObj.Archive;
             end;
             FDMAds.Next;
           end;
@@ -264,11 +277,22 @@ begin
     sortlist.Add('fields.adsend');
     sortlist.Add('-fields.adsend');
     var
+    positionlist := TStringList.Create;
+    positionlist.Add('all');
+    positionlist.Add('Index-Position1');
+    positionlist.Add('Index-Position2');
+    positionlist.Add('Index-Position3');
+    positionlist.Add('Index-Position4');
+    positionlist.Add('Index-Position5');
+    positionlist.Add('Index-Position6');
+    positionlist.Add('Category-Position1');
+    positionlist.Add('Category-Position2');
+    positionlist.Add('Article-Position1');
+    positionlist.Add('Article-Position2');
+    var
     ContentObj := TMAds.Create(CmaToken, SpaceId, Environment);
     var
-    ContentResult := ContentObj.GetAll(SearchTxt.Text, Page, Limit,
-      sortlist[SortCombo.Selected.Index], UserId, UserTitle,
-      StatusCbo.Selected.Text);
+    ContentResult := ContentObj.GetAll(SearchTxt.Text, positionlist[PositionCbo.Selected.Index], sortlist[SortCombo.Selected.Index], StatusCbo.Selected.Text, Page, Limit);
     if ContentResult.FindValue('status').Value.ToBoolean then
     begin
       CurrentPage := Page;
@@ -362,6 +386,13 @@ begin
   FormAds.PublishStatus := False;
   if FormAds.ShowModal = mrOk then
     GetLists;
+end;
+
+procedure TfAdsLists.PositionCboChange(Sender: TObject);
+begin
+  Page := 1;
+  PageTxt.Value := 1;
+  GetLists;
 end;
 
 procedure TfAdsLists.SetSize;

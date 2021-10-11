@@ -18,14 +18,14 @@ object fAdsLists: TfAdsLists
       Position.X = 5.000000000000000000
       Position.Y = 5.000000000000000000
       Size.Width = 1009.000000000000000000
-      Size.Height = 50.000000000000000000
+      Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       object Label1: TLabel
         Align = Left
         StyledSettings = [FontColor]
         Size.Width = 120.000000000000000000
-        Size.Height = 41.000000000000000000
+        Size.Height = 31.000000000000000000
         Size.PlatformDefault = False
         TextSettings.Font.Family = 'Prompt'
         TextSettings.Font.Size = 30.000000000000000000
@@ -36,7 +36,7 @@ object fAdsLists: TfAdsLists
       object Line1: TLine
         Align = Bottom
         LineType = Bottom
-        Position.Y = 41.000000000000000000
+        Position.Y = 31.000000000000000000
         Size.Width = 1009.000000000000000000
         Size.Height = 9.000000000000000000
         Size.PlatformDefault = False
@@ -49,169 +49,155 @@ object fAdsLists: TfAdsLists
       Margins.Top = 5.000000000000000000
       Margins.Right = 5.000000000000000000
       Position.X = 5.000000000000000000
-      Position.Y = 60.000000000000000000
+      Position.Y = 50.000000000000000000
       Size.Width = 1009.000000000000000000
-      Size.Height = 50.000000000000000000
+      Size.Height = 35.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       object NewBtn: TButton
         Align = Left
-        Size.Width = 145.000000000000000000
-        Size.Height = 50.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 1
+        TabOrder = 2
         OnClick = NewBtnClick
-        object Layout9: TLayout
-          Align = Client
-          Size.Width = 145.000000000000000000
-          Size.Height = 50.000000000000000000
+        object Image10: TImage
+          MultiResBitmap = <
+            item
+              Width = 24
+              Height = 24
+              PNG = {
+                89504E470D0A1A0A0000000D4948445200000018000000180806000000E0773D
+                F8000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                02A349444154484BED954D681351108067FF1A0D42C053EE7AA8F4E255027A50
+                2FAD0D69FA13C5530E1E7A135AA2148AA8ADB46250D44BA5F7926AD21E44BCF8
+                1BA8070F3988067B11248794A4B484184D36BBAF336FDF5B9276DBA652F0E207
+                6F7766DEECBC3733EFB1F09F7F8ED2979E66ACD9645CD17565BB4C6FD2A59DF0
+                F2DB2EBF8ADD52E9CD1FA0690A1F5EB244DA5BE7F693116701CB627C78C91269
+                6F9DDB4F26A8449B7F7EB1C38262F5A66EDB223CE8F408F8FCB0B4B404C56291
+                1B25C1601006060684D6CE767FE94BB164DF38BCC987CC8E0C08AF0C24A3A3A3
+                423A38EE02914804144501DC80B038908D68B61C531D4B303F3F0FA669D66DDB
+                CEAAAAFA05CDCC308C9E783C7E0E651F7744DC05D2E934944A25A179C2570A04
+                02100A8518069F3B3F72696AF2FDC26560F6595B55692BEF4E1756E3A06B37F8
+                1708BF682FA3137C87B4339981573684854750D3B46BB1E5FBAAC294A768EA72
+                661C2CB04C0DF4B1C5C1C413D29D7B80609A7C8714589645CA34363636209FCF
+                432E979B13C19FA10B0F3E742A04D1EE332482069A81D57A3C929EB94EBA9B41
+                269381B5B535EE249147AF5C2EC3CACA0AAB542AF54DAD7E22EB5BFF81D3EECE
+                53D104346D0BAE2E278505B1A0593B520BB83D0887C3BC44426DA3502840B55A
+                8546A3F1311B58BF82A6B6B27882753A6AFA133C83C5FE31F01B6EE377054FCC
+                C3D8F2839358D77E2ACB300E2F525FB390F9FE0918D86F94DE17533B3BB91B8C
+                258F41573776AEAF9305C086B79E25D98BE1F4EC047E342D548E670F1C66DC53
+                D429BF8DDA236AA050F7C0B2EA6AD7AC26B48E595DF860F6C42ED4F1EC5E1426
+                CEB7F24FC8970B42C36A827A37131D7F7DE012499C525977E80F234C1C0B2BAF
+                02BBF77CF0E624E97FBD0031944A1E57747302C3F05B8677FFB366E8530BE1F1
+                327700802D86F8DBE40387A0C60000000049454E44AE426082}
+            end>
+          HitTest = False
+          Position.X = 5.000000000000000000
+          Position.Y = 5.000000000000000000
+          Size.Width = 25.000000000000000000
+          Size.Height = 25.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 5
-          object Image10: TImage
-            MultiResBitmap = <
-              item
-                Width = 24
-                Height = 24
-                PNG = {
-                  89504E470D0A1A0A0000000D4948445200000018000000180806000000E0773D
-                  F8000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                  029349444154484BED944D6813511080E76DB2290661C153EE7AA8F4E255A47A
-                  502FAD95246D52C593140FB9092D5102BDD854DA4A51D44B25F790D64D7A10F1
-                  E26F0E062427D1A817A1E4D09294E410A3C9B679CEBC7D2F26EDF64F0A5EFCE0
-                  EDCECC9BCCCC9B791BF8CF3F870D9AD39CB75A5C289AC6B6CAF4265DD90927BF
-                  ADF2F3D0A4466FF100C698584EB242D93BF7F692113B01E75C2C2759A1EC9D7B
-                  7BC904B5A8FAEB079A0E078A35B034D592E1C14D0FA3C70B994C065657578551
-                  E1F3F920100848AD9BADFECA9762A9B909C4900F996D27209C4EA0884422523A
-                  38ED047EBF5F0C1F0B90161B75215AF2FA111AB62091488065590DF4CFA2CF47
-                  34735DD7FBC6C6C6CEA1DC231C917602D334A1542A49CD1191C9300CE8EFEFE7
-                  187CE17CF8527CF24DF20AC63ECBED4A5E9F5AF9721D34768B7C09F1A13D0BC6
-                  448554993A81D36908B451AC1BA3CB73E8CC1EA3C963EFD8E01DB51868E38BC3
-                  D147A4DBDF818DA89002DBC5FC9169552A1528140A90CFE71764F027E822828F
-                  9C3C03C1DED3246210A6639A876173E6A6D0D509D2E934ACADAD092785BA7AE5
-                  721972B91CAF56AB8DAAAB713CDBB3FE1DB7DB95A78251D8686DC2B5E5796941
-                  386CD43D75A373C8A24552EDA2582C42AD568366B3F92E6BAC5F4553575B1C61
-                  E03E6279A3E2048B43E3E0D5DB83DF116CFFFDD1CCBD1358C510B52584CB89D4
-                  A72CA4BFBEA779BC64034FE3DB27B9139CCF1F659E5EAC6E703F0930C32BC796
-                  EC46C89C8DE18FA6A52A709C81CD4CE72DDA173FF5FA031AA05477816F3634CF
-                  AC4B6AFBE65BF2ADD517BED0C0BB7B519A049FCB2B502817A546DD6153E9E0C4
-                  8B03B74861B78ADFC1EBD255240E14FFE8F8DDA5E1DB93A4FF75026224357F8C
-                  B9AD1886115F1926FCE0D2DDF1E4E589B2700080DF204DDADEACBDDB97000000
-                  0049454E44AE426082}
-              end>
-            HitTest = False
-            Position.X = 12.000000000000000000
-            Position.Y = 12.000000000000000000
-            Size.Width = 25.000000000000000000
-            Size.Height = 25.000000000000000000
-            Size.PlatformDefault = False
-          end
-          object Label9: TLabel
-            Anchors = [akLeft, akTop, akRight]
-            StyledSettings = [Style, FontColor]
-            Position.X = 48.000000000000000000
-            Position.Y = 16.000000000000000000
-            Size.Width = 89.000000000000000000
-            Size.Height = 17.000000000000000000
-            Size.PlatformDefault = False
-            TextSettings.Font.Family = 'Prompt'
-            TextSettings.Font.Size = 14.000000000000000000
-            Text = 'Add'
-            TabOrder = 1
-          end
+        end
+        object Label9: TLabel
+          Anchors = [akLeft, akTop, akRight]
+          StyledSettings = [Style, FontColor]
+          Position.X = 40.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Width = 64.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Prompt'
+          TextSettings.Font.Size = 14.000000000000000000
+          Text = 'Add'
+          TabOrder = 1
         end
       end
       object ArchiveBtn: TButton
         Align = Left
         Margins.Left = 10.000000000000000000
-        Position.X = 155.000000000000000000
-        Size.Width = 145.000000000000000000
-        Size.Height = 50.000000000000000000
+        Position.X = 130.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 2
+        TabOrder = 3
         OnClick = ArchiveBtnClick
-        object Layout1: TLayout
-          Align = Client
-          Size.Width = 145.000000000000000000
-          Size.Height = 50.000000000000000000
+        object ArchiveLabel: TLabel
+          Anchors = [akLeft, akTop, akRight]
+          StyledSettings = [FontColor]
+          Position.X = 40.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Width = 64.000000000000000000
+          Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 5
-          object Image1: TImage
-            MultiResBitmap = <
-              item
-                Width = 24
-                Height = 24
-                PNG = {
-                  89504E470D0A1A0A0000000D4948445200000018000000180806000000E0773D
-                  F8000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                  01F049444154484BED94BF2F43411CC0BF77AF4FC5A262E96810E54FB090B031
-                  68B5668B485A099381D4202A2126128BC55E7DDA2016ABC46891A8412416AD2E
-                  12219AEA3BF7FDF6AE5E9B176DA48DC527B9F7FD71DFBBEFFB7EEFDE837FFE1C
-                  36696D0A61DB820CCE59BD8E126DED47DCE2EAF5F399358E921EC018A3E1A66B
-                  B4DF39D748975412082168B8E91AED77CE35D2116CD1CBC79B74B506DC6BE268
-                  C356DB83071FDDDE2E48A7D390CBE5C8A9F1FBFD100A8594554B7DBC8EC5BDF4
-                  B91174C82DC65901DDA2B3E955D70A34D16894A45C9B976291739E2447135413
-                  C8C574F8289D285F598E3DA9AF3C9C4EF9CA9FE6B6D467414011637CFE00F40E
-                  27F89D153669912210DE2AD11920966541A15050562DB158CC239249E3BEF378
-                  C1FEEC5897397D346118DEFE9179809E7178BBD925976630B203D9D4B259ADC0
-                  961F882C9DE90A9CD5A0FFF122268AAFD8A10AFD638BF2768C282B2B375B553A
-                  6EBE2BEDA58AA10FB95CC62EB88371F2054ACA6CCCD389B83D0AD1A8B62893C9
-                  403EFFFD8688F39ACAFE566391C1C831C96C6A9AA406FDD9CB4365A9EF000906
-                  83D42265B60CFA55BC978AD467F2B41836914AD4DE4B17CE237186FD54E68F50
-                  8B1C6D6BFAAD7F9BA0F2376D130667576D4D00365B685B02D363EE0FCC58D74D
-                  2730383F506A4302A373CFBD7D437100802F0F9DDCC7302A8508000000004945
-                  4E44AE426082}
-              end>
-            HitTest = False
-            Position.X = 12.000000000000000000
-            Position.Y = 12.000000000000000000
-            Size.Width = 25.000000000000000000
-            Size.Height = 25.000000000000000000
-            Size.PlatformDefault = False
-          end
-          object ArchiveLabel: TLabel
-            Anchors = [akLeft, akTop, akRight]
-            StyledSettings = [FontColor]
-            Position.X = 48.000000000000000000
-            Position.Y = 16.000000000000000000
-            Size.Width = 89.000000000000000000
-            Size.Height = 17.000000000000000000
-            Size.PlatformDefault = False
-            TextSettings.Font.Family = 'Prompt'
-            TextSettings.Font.Size = 14.000000000000000000
-            Text = 'Archive'
-            TabOrder = 1
-          end
+          TextSettings.Font.Family = 'Prompt'
+          TextSettings.Font.Size = 14.000000000000000000
+          Text = 'Archive'
+          TabOrder = 1
+        end
+        object Image1: TImage
+          MultiResBitmap = <
+            item
+              Width = 24
+              Height = 24
+              PNG = {
+                89504E470D0A1A0A0000000D4948445200000018000000180806000000E0773D
+                F8000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                01FF49444154484BED94CD4B1B4114C0DFCCEE1AE9A5112FC19387A4DABFA037
+                857A53886C48E8B1E0414802F1D44343402C155A3C29F4D28B6763D604955C7A
+                153CF622189052E8C5A4B9084531CD6EC7792F33E9262C4D2809BDF407B3EF63
+                DEBEB7F36666E13FFF1CB6E26C0BE1BA820CD364FD3A4AB4B51F098AEBD7AB2F
+                36394A7A8061301A41BA46FBFD73837449A780E7091A41BA46FBFD738374045B
+                74737F2B4605E65A3ED8FAA5D283898FC7A147502E97A15EAF9353138944C0B6
+                6D65F5D21FAF633197DE37823679C4F85740A7E834910F5C81269D4E93F43CAF
+                C139CFC95124C710740BC8C2C01823E9077D32B127E59E1CAFBF9EAC863DD77C
+                CF187F091EB430263C330753CFDEF0AB72CAA2971431FB5D9BF600711C079ACD
+                A6B27AC96432A628168D2F934759F7E7C496614098262C23145D5807985A82DB
+                8B5D7269E6933B502BBDB2BA2B70E50531F1A2A815F857235BC2BE7DCA88D68F
+                06D948F4794E9E8E0565D564B2BCD231F9AEB4373A86DE64D9059241609CFC80
+                B63207737D2C2E0F6D1ADD16552A1568347E7F21E23FA6B2BFDD58643E7944B2
+                564A90D4A0BF76B6AF2C750F90783C4E2D52E6C8A05FC55DBB05E3488EB0E5D2
+                DBDE731940355960D84F65FE116A91AF6D437FF5DF16E8FC4DC7843CEAE7632D
+                C005CB8EAD80655A1F9EA49CCF43173038FFA8D481C416D7BE4FCF3E2D00003C
+                00C509D9C312041A1B0000000049454E44AE426082}
+            end>
+          HitTest = False
+          Position.X = 5.000000000000000000
+          Position.Y = 5.000000000000000000
+          Size.Width = 25.000000000000000000
+          Size.Height = 25.000000000000000000
+          Size.PlatformDefault = False
         end
       end
       object SearchLabel: TLabel
-        Anchors = [akTop, akRight]
+        Align = Right
         StyledSettings = [Size, Style, FontColor]
-        Position.X = 584.000000000000000000
-        Position.Y = 8.000000000000000000
+        Margins.Right = 10.000000000000000000
+        Position.X = 592.000000000000000000
         Size.Width = 67.000000000000000000
-        Size.Height = 28.000000000000000000
+        Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
         TextSettings.Font.Family = 'Prompt'
         TextSettings.HorzAlign = Trailing
         Text = 'Search :'
-        TabOrder = 3
+        TabOrder = 4
       end
       object SearchTxt: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        Anchors = [akTop, akRight]
+        Align = Right
         TabOrder = 0
-        Position.X = 667.000000000000000000
-        Position.Y = 8.000000000000000000
+        Position.X = 669.000000000000000000
+        Margins.Right = 10.000000000000000000
         Size.Width = 217.000000000000000000
-        Size.Height = 30.000000000000000000
+        Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
         object SearchIconLayout: TLayout
           Align = FitRight
           Cursor = crArrow
           HitTest = True
-          Position.X = 187.000000000000000000
-          Size.Width = 30.000000000000000000
-          Size.Height = 30.000000000000000000
+          Position.X = 182.000000000000000000
+          Size.Width = 35.000000000000000000
+          Size.Height = 35.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           object SearchIcon: TImage
@@ -252,15 +238,14 @@ object fAdsLists: TfAdsLists
         end
       end
       object SortCombo: TComboBox
-        Anchors = [akTop, akRight]
+        Align = Right
         Images = sortlist
         ItemIndex = 3
-        Position.X = 894.000000000000000000
-        Position.Y = 8.000000000000000000
+        Position.X = 896.000000000000000000
         Size.Width = 113.000000000000000000
-        Size.Height = 30.000000000000000000
+        Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 4
+        TabOrder = 5
         OnChange = SortComboChange
         object titleasc: TListBoxItem
           ImageIndex = 0
@@ -324,13 +309,14 @@ object fAdsLists: TfAdsLists
         end
       end
       object StatusCbo: TComboBox
+        Align = Left
         ItemIndex = 0
-        Position.X = 312.000000000000000000
-        Position.Y = 8.000000000000000000
-        Size.Width = 217.000000000000000000
-        Size.Height = 30.000000000000000000
+        Margins.Left = 10.000000000000000000
+        Position.X = 421.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 5
+        TabOrder = 6
         OnChange = StatusCboChange
         object ListBoxItem1: TListBoxItem
           IsSelected = True
@@ -353,6 +339,69 @@ object fAdsLists: TfAdsLists
           Text = 'Archive'
         end
       end
+      object PositionCbo: TComboBox
+        Align = Left
+        DropDownCount = 11
+        ItemIndex = 0
+        Margins.Left = 10.000000000000000000
+        Position.X = 260.000000000000000000
+        Size.Width = 151.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        OnChange = PositionCboChange
+        object AllPosition: TListBoxItem
+          IsSelected = True
+          Size.Width = 19.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'All-Position'
+        end
+        object IndexPosition1: TListBoxItem
+          Size.Width = 19.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Index-Position1'
+        end
+        object IndexPosition2: TListBoxItem
+          TabOrder = 2
+          Text = 'Index-Position2'
+        end
+        object IndexPosition3: TListBoxItem
+          TabOrder = 3
+          Text = 'Index-Position3'
+        end
+        object IndexPosition4: TListBoxItem
+          TabOrder = 4
+          Text = 'Index-Position4'
+        end
+        object IndexPosition5: TListBoxItem
+          TabOrder = 5
+          Text = 'Index-Position5'
+        end
+        object IndexPosition6: TListBoxItem
+          TabOrder = 6
+          Text = 'Index-Position6'
+        end
+        object CategoryPosition1: TListBoxItem
+          TabOrder = 7
+          Text = 'Category-Position1'
+        end
+        object CategoryPosition2: TListBoxItem
+          TabOrder = 8
+          Text = 'Category-Position2'
+        end
+        object ArticlePosition1: TListBoxItem
+          TabOrder = 9
+          Text = 'Article-Position1'
+        end
+        object ArticlePosition2: TListBoxItem
+          TabOrder = 10
+          Text = 'Article-Position2'
+        end
+      end
     end
     object BodyLayout: TLayout
       Align = Client
@@ -361,7 +410,7 @@ object fAdsLists: TfAdsLists
       Margins.Right = 5.000000000000000000
       Margins.Bottom = 5.000000000000000000
       Size.Width = 1009.000000000000000000
-      Size.Height = 575.000000000000000000
+      Size.Height = 600.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       object ContentGrid: TStringGrid
@@ -370,7 +419,7 @@ object fAdsLists: TfAdsLists
         CanFocus = True
         ClipChildren = True
         Size.Width = 1009.000000000000000000
-        Size.Height = 575.000000000000000000
+        Size.Height = 600.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         RowHeight = 30.000000000000000000
@@ -378,7 +427,7 @@ object fAdsLists: TfAdsLists
         OnCellClick = ContentGridCellClick
         OnCellDblClick = ContentGridCellDblClick
         Viewport.Width = 1005.000000000000000000
-        Viewport.Height = 550.000000000000000000
+        Viewport.Height = 575.000000000000000000
       end
     end
     object BottomLayout: TLayout

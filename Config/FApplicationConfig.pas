@@ -19,18 +19,19 @@ type
     SpaceTxt: TEdit;
     EnvironmentLayout: TLayout;
     EnvironmentLabel: TLabel;
-    EnvironmentTxt: TEdit;
     SaveBtn: TButton;
     CancelBtn: TButton;
     Layout2: TLayout;
     ImageWidthLabel: TLabel;
     ImageWidth: TNumberBox;
-    Layout15: TLayout;
     Image3: TImage;
     Label10: TLabel;
-    Layout3: TLayout;
     Image1: TImage;
     Label1: TLabel;
+    EnvCbo: TComboBox;
+    ListBoxItem1: TListBoxItem;
+    ListBoxItem2: TListBoxItem;
+    ListBoxItem3: TListBoxItem;
     procedure SaveBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -70,13 +71,17 @@ begin
       if ConfigData[0] = 'spaceid' then
         SpaceTxt.Text := ConfigData[1];
       if ConfigData[0] = 'environment' then
-        EnvironmentTxt.Text := ConfigData[1];
+      begin
+        if ConfigData[1] = 'master' then EnvCbo.ItemIndex := 0;
+        if ConfigData[1] = 'development' then EnvCbo.ItemIndex := 1;
+        if ConfigData[1] = 'staging' then EnvCbo.ItemIndex := 2;
+      end;
     end;
   end
   else
   begin
     SpaceTxt.Text := 'e7ee8kzf5re6';
-    EnvironmentTxt.Text := 'master';
+    EnvCbo.ItemIndex := 0;
   end;
 end;
 
@@ -84,7 +89,7 @@ procedure TApplicationConfig.SaveBtnClick(Sender: TObject);
 var NewConfig : TextFile;
 ConfigFile:String;
 begin
-  if (Trim(SpaceTxt.Text).Length > 0) AND (Trim(EnvironmentTxt.Text).Length > 0) then
+  if Trim(SpaceTxt.Text).Length > 0 then
   begin
     // create file with word
     var themename := 'Default';
@@ -101,7 +106,7 @@ begin
     AssignFile(NewConfig, ConfigFile);
     ReWrite(NewConfig);
     Writeln(NewConfig, Concat('spaceid=',SpaceTxt.Text));
-    Writeln(NewConfig, Concat('environment=',EnvironmentTxt.Text));
+    Writeln(NewConfig, Concat('environment=',EnvCbo.Selected.Text));
     Writeln(NewConfig, Concat('imagewidth=',ImageWidth.Value.ToString));
     // close file
     CloseFile(NewConfig);
@@ -109,7 +114,7 @@ begin
   end
   else
   begin
-    ShowMessage('Please config SpaceId and Environment');
+    ShowMessage('Please config SpaceId.');
   end;
 end;
 
