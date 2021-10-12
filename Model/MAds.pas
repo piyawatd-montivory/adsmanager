@@ -53,10 +53,11 @@ type
     function GetFieldsJson: TJSONObject;
     function GetAll(pSearch,pPosition, pSortValue, pStatus: String;
       pPage, pLimit: Integer): TJSONObject;
+    function GetList(pPosition,pId:String): TJSONObject;
     function Save: TJSONObject;
     function Update: TJSONObject;
     function GetById(pId: string): TJSONObject;
-    function CheckSlug(pSlug: String): TJSONObject;
+    function CheckSlug(pSlug,pId: String): TJSONObject;
     function Validate: TJSONObject;
     function Delete: Boolean;
     function Publish: Boolean;
@@ -112,7 +113,7 @@ begin
 Result := pResult;
 end;
 
-function TMAds.CheckSlug(pSlug: String): TJSONObject;
+function TMAds.CheckSlug(pSlug,pId: String): TJSONObject;
 begin
   var
   ResultRest := TJSONObject.Create;
@@ -124,6 +125,7 @@ begin
     [poDoNotEncode]);
   CARequest.AddParameter('content_type', 'ads', pkGETorPOST, [poDoNotEncode]);
   CARequest.AddParameter('fields.slug', pSlug, pkGETorPOST, [poDoNotEncode]);
+  if pId <> '' then CARequest.AddParameter('sys.id[ne]', pId, pkGETorPOST, [poDoNotEncode]);
   // กำหนด url ของ api
   CAClient.BaseURL := Concat(ContentfulUrl, '/entries');
   // assige client ให้ request
@@ -182,6 +184,54 @@ begin
       ItemObject.FindValue('sys.id').Value);
   end;
   ContentfulSchedule.Free;
+end;
+
+function TMAds.GetList(pPosition,pId:String): TJSONObject;
+begin
+  var
+  ResultRest := TJSONObject.Create;
+  var
+  CAClient := TRESTClient.Create(nil);
+  var
+  CARequest := TRESTRequest.Create(nil);
+  CARequest.AddParameter('Authorization', 'Bearer ' + CmaToken, pkHTTPHEADER,
+    [poDoNotEncode]);
+  CARequest.AddParameter('content_type', 'ads', pkGETorPOST, [poDoNotEncode]);
+  CARequest.AddParameter('limit', '200', pkGETorPOST,
+    [poDoNotEncode]);
+  CARequest.AddParameter('sys.archivedVersion[exists]', 'false', pkGETorPOST,
+      [poDoNotEncode]);
+  CARequest.AddParameter('order', '-fields.adsstart', pkGETorPOST, [poDoNotEncode]);
+  if pId <> '' then CARequest.AddParameter('sys.id[ne]', pId, pkGETorPOST, [poDoNotEncode]);
+  CARequest.AddParameter('fields.position.en-US', pPosition, pkGETorPOST, [poDoNotEncode]);
+  // กำหนด url ของ api
+  CAClient.BaseURL := Concat(ContentfulUrl, '/entries');
+  // assige client ให้ request
+  CARequest.Client := CAClient;
+  // set parameter rmGET,rmPOST,rmPUT,rmDELETE
+  CARequest.Method := rmGET;
+  // Memo1.Lines.Add(BodyJson.ToJSON);
+  // เรียก api
+  try
+    CARequest.Execute;
+    if (CARequest.Response.StatusCode = 200) then
+    begin
+      var
+      resultObj := CARequest.Response.JSONValue as TJSONObject;
+      var
+      totalrecord := resultObj.FindValue('total').value.ToInteger;
+      ResultRest.AddPair('status', TJSONBool.Create(True));
+      ResultRest.AddPair('result', resultObj);
+    end
+    else
+    begin
+      ResultRest.AddPair('status', TJSONBool.Create(False));
+      ResultRest.AddPair('result', CARequest.Response.JSONText);
+    end;
+  finally
+    CAClient.Free;
+  end;
+  Result := ResultRest;
 end;
 
 function TMAds.GetAll(pSearch, pPosition, pSortValue, pStatus: String;
