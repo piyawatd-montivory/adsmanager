@@ -9,7 +9,7 @@ uses
   FMX.StdCtrls, FMX.Edit, FMX.Controls.Presentation, FMX.Layouts,
   FMX.TabControl,
   FMX.Memo.Types, FMX.ListBox, FMX.ScrollBox, FMX.Memo, FMX.Media, System.JSON,
-  FMX.DateTimeCtrls, FMX.Ani, System.DateUtils, System.Threading;
+  FMX.DateTimeCtrls, FMX.Ani, System.DateUtils, System.Threading, MAds;
 
 type
   TfAdsForm = class(TForm)
@@ -96,6 +96,7 @@ type
     delAdsImageId, delAdsVdoId, AdsImageId, AdsVdoId, CurrentMediaType: String;
     AdsImageVersion, AdsVdoVersion, AView, AClick, Ratio: Integer;
     FormOpen: Boolean;
+    ContentObj: TMAds;
     procedure ProcessContentful;
   public
     { Public declarations }
@@ -104,6 +105,8 @@ type
     PublishStatus: Boolean;
     ImageWidthLimit, Version: Integer;
     procedure ChangeAdsLabel;
+    function CreateDateTime(pDateinput: String; pTimeinput: TDateTime)
+      : TDateTime;
   end;
 
 var
@@ -111,24 +114,44 @@ var
 
 implementation
 
-uses ContentfulVideo, ContentfulImage, ContentfulSchedule, MAds, DDateTime;
+uses ContentfulVideo, ContentfulImage, ContentfulSchedule, DDateTime;
 
 {$R *.fmx}
 
+function TfAdsForm.CreateDateTime(pDateinput: String; pTimeinput: TDateTime)
+  : TDateTime;
+begin
+  var
+  sYear := StrToInt(Copy(pDateinput, 7, 4));
+  var
+  sMonth := StrToInt(Copy(pDateinput, 4, 2));
+  var
+  sDay := StrToInt(Copy(pDateinput, 1, 2));
+  var
+  sHour := FormatDateTime('hh', pTimeinput).ToInteger;
+  var
+  sMinute := FormatDateTime('nn', pTimeinput).ToInteger;
+  // var sSecond := 00;
+  // var sMillisecond := Round(0000);
+  Result := EncodeDateTime(sYear, sMonth, sDay, sHour, sMinute, 00,
+    Round(0000));
+end;
+
 procedure TfAdsForm.ChangeAdsLabel;
 begin
-var labelList := TStringList.Create;
-labelList.Add('Ads ขนาด 970 * 250 pixel');
-labelList.Add('Ads ขนาด 336 * 280 pixel');
-labelList.Add('Ads ขนาด 336 * 280 pixel');
-labelList.Add('Ads ขนาด 336 * 280 pixel');
-labelList.Add('Ads ขนาด 970 * 250 pixel');
-labelList.Add('Ads ขนาด 300 * 600 pixel');
-labelList.Add('Ads ขนาด 970 * 250 pixel');
-labelList.Add('Ads ขนาด 336 * 280 pixel');
-labelList.Add('Ads ขนาด 728 * 90 pixel');
-labelList.Add('Ads ขนาด 336 * 280 pixel');
-AdsSizeLabel.Text := labelList[PositionCbo.Selected.Index];
+  var
+  labelList := TStringList.Create;
+  labelList.Add('Ads ขนาด 970 * 250 pixel');
+  labelList.Add('Ads ขนาด 336 * 280 pixel');
+  labelList.Add('Ads ขนาด 336 * 280 pixel');
+  labelList.Add('Ads ขนาด 336 * 280 pixel');
+  labelList.Add('Ads ขนาด 970 * 250 pixel');
+  labelList.Add('Ads ขนาด 300 * 600 pixel');
+  labelList.Add('Ads ขนาด 970 * 250 pixel');
+  labelList.Add('Ads ขนาด 336 * 280 pixel');
+  labelList.Add('Ads ขนาด 728 * 90 pixel');
+  labelList.Add('Ads ขนาด 336 * 280 pixel');
+  AdsSizeLabel.Text := labelList[PositionCbo.Selected.Index];
 end;
 
 procedure TfAdsForm.FormCreate(Sender: TObject);
@@ -218,26 +241,6 @@ begin
   end;
 end;
 
-procedure TfAdsForm.SaveBtnClick(Sender: TObject);
-var
-  aTask: ITask;
-begin
-  aTask := TTask.Create(
-    procedure
-    begin
-      sleep(2000); // 2 seconds
-      TThread.Synchronize(TThread.Current,
-        procedure
-        begin
-          ProcessContentful;
-        end);
-    end);
-  aTask.Start;
-  BGProcess.Visible := True;
-  ProcessLabelAnimate.Enabled := True;
-  // ProcessContentful;
-end;
-
 procedure TfAdsForm.UploadPhotoClick(Sender: TObject);
 begin
   UploadType := 'photo';
@@ -305,83 +308,112 @@ end;
 
 procedure TfAdsForm.PositionCboChange(Sender: TObject);
 begin
-ChangeAdsLabel;
+  ChangeAdsLabel;
+end;
+
+procedure TfAdsForm.SaveBtnClick(Sender: TObject);
+var
+  aTask: ITask;
+begin
+  var
+  checktime := True;
+  // Create Ads Start Date
+  var
+  CAdsStart := CreateDateTime(AdsstartdateTxt.Text, AdsstarttimeTxt.DateTime);
+  // Create Ads End Date
+  var
+  CAdsEnd := CreateDateTime(AdsenddateTxt.Text, AdsendtimeTxt.DateTime);
+  if CompareDateTime(CAdsStart, CAdsEnd) >= 0 then
+  begin
+    ShowMessage('Ads Start must before Ads End');
+    exit;
+  end;
+  // check date time old ads
+
+  if checktime = False then
+  begin
+    ShowMessage('Ads time is overlap.');
+    exit;
+  end;
+  ContentObj := TMAds.Create(CmaToken, SpaceId, Environment);
+  ContentObj.Title := TitleTxt.Text;
+  ContentObj.Slug := SlugTxt.Text;
+  ContentObj.Link := LinkTxt.Text;
+  ContentObj.AType := TypeCbo.Selected.Text;
+  ContentObj.Position := PositionCbo.Selected.Text;
+  ContentObj.AView := AView;
+  ContentObj.AClick := AClick;
+  ContentObj.Ratio := Ratio;
+  ContentObj.AcLog := AcLog;
+  ContentObj.Adsstart := Concat(FormatDateTime('yyyy-mm-dd',
+    AdsstartdateTxt.DateTime), 'T', FormatDateTime('hh:nn',
+    AdsstarttimeTxt.DateTime));
+  ContentObj.Adsend := Concat(FormatDateTime('yyyy-mm-dd',
+    AdsenddateTxt.DateTime), 'T', FormatDateTime('hh:nn',
+    AdsendtimeTxt.DateTime));
+  if TypeCbo.Selected.Text = 'Photo' then
+  begin
+    if AdsImageId <> '' then
+      ContentObj.AdsmediaId := AdsImageId;
+    if aAdsImage <> '' then
+      ContentObj.AdsmediaId := 'addid';
+  end
+  else
+  begin
+    if AdsVdoId <> '' then
+      ContentObj.AdsmediaId := AdsVdoId;
+    if aAdsVdo <> '' then
+      ContentObj.AdsmediaId := 'addid';
+  end;
+  var
+  ValidateResult := ContentObj.Validate;
+  // // verify pass
+  if ValidateResult.FindValue('result').Value.ToBoolean = False then
+  begin
+    const
+      sLineBreak = {$IFDEF MACOS64} AnsiChar(#10) {$ENDIF} {$IFDEF LINUX} AnsiChar(#10) {$ENDIF} {$IFDEF MSWINDOWS} AnsiString(#13#10) {$ENDIF};
+    var
+    ListError := '';
+    var
+    ErrorArray := ValidateResult.FindValue('error') as TJSONArray;
+    var
+    i := 0;
+    for i := 0 to ErrorArray.Count - 1 do
+    begin
+      var
+      ErrorItem := ErrorArray.Get(i) as TJSONObject;
+      ListError := Concat(ListError, ErrorItem.FindValue('message').Value,
+        sLineBreak);
+    end;
+    ShowMessage(ListError);
+    ContentObj.Free;
+    exit;
+  end;
+  aTask := TTask.Create(
+    procedure
+    begin
+      sleep(2000); // 2 seconds
+      TThread.Synchronize(TThread.Current,
+        procedure
+        begin
+          ProcessContentful;
+        end);
+    end);
+  aTask.Start;
+  BGProcess.Visible := True;
+  ProcessLabelAnimate.Enabled := True;
 end;
 
 procedure TfAdsForm.ProcessContentful;
-var
-  Result: TJSONObject;
-  sYear, sMonth, sDay, sHour, sMinute, sSecond, sMillisecond: Word;
-  eYear, eMonth, eDay, eHour, eMinute, eSecond, eMillisecond: Word;
 begin
   // Create Ads Start Date
-  sYear := StrToInt(Copy(AdsstartdateTxt.Text, 7, 4));
-  sMonth := StrToInt(Copy(AdsstartdateTxt.Text, 4, 2));
-  sDay := StrToInt(Copy(AdsstartdateTxt.Text, 1, 2));
-  sHour := FormatDateTime('hh', AdsstarttimeTxt.DateTime).ToInteger;
-  sMinute := FormatDateTime('nn', AdsstarttimeTxt.DateTime).ToInteger;
-  sSecond := 00;
-  sMillisecond := Round(0000);
   var
-  ScheduleDateTime := EncodeDateTime(sYear, sMonth, sDay, sHour, sMinute,
-    sSecond, sMillisecond);
+  Adsstart := CreateDateTime(AdsstartdateTxt.Text, AdsstarttimeTxt.DateTime);
   // Create Ads End Date
-  eYear := StrToInt(Copy(AdsenddateTxt.Text, 7, 4));
-  eMonth := StrToInt(Copy(AdsenddateTxt.Text, 4, 2));
-  eDay := StrToInt(Copy(AdsenddateTxt.Text, 1, 2));
-  eHour := FormatDateTime('hh', AdsstarttimeTxt.DateTime).ToInteger;
-  eMinute := FormatDateTime('nn', AdsstarttimeTxt.DateTime).ToInteger;
-  eSecond := 00;
-  eMillisecond := Round(0000);
   var
-  ScheduleDateEndTime := EncodeDateTime(eYear, eMonth, eDay, eHour, eMinute,
-    eSecond, eMillisecond);
-  if ScheduleDateEndTime <= ScheduleDateTime then
-  begin
-    BGProcess.Visible := False;
-    ProcessLabelAnimate.Enabled := False;
-    ShowMessage('End Time must more than Start Time');
-    exit
-  end;
-
+  Adsend := CreateDateTime(AdsenddateTxt.Text, AdsendtimeTxt.DateTime);
   try
-    Result := TJSONObject.Create;
-    var
-    ContentObj := TMAds.Create(CmaToken, SpaceId, Environment);
-    ContentObj.Title := TitleTxt.Text;
-    ContentObj.Slug := SlugTxt.Text;
-    ContentObj.Link := LinkTxt.Text;
-    ContentObj.AType := TypeCbo.Selected.Text;
-    ContentObj.Position := PositionCbo.Selected.Text;
-    ContentObj.AView := AView;
-    ContentObj.AClick := AClick;
-    ContentObj.Ratio := Ratio;
-    ContentObj.AcLog := AcLog;
-    ContentObj.Adsstart :=
-      Concat(FormatDateTime('yyyy-mm-dd', AdsstartdateTxt.DateTime), 'T',
-      FormatDateTime('hh:nn', AdsstarttimeTxt.DateTime));
-    ContentObj.Adsend := Concat(FormatDateTime('yyyy-mm-dd',
-      AdsenddateTxt.DateTime), 'T', FormatDateTime('hh:nn',
-      AdsendtimeTxt.DateTime));
-    if TypeCbo.Selected.Text = 'Photo' then
-    begin
-      if AdsImageId <> '' then
-        ContentObj.AdsmediaId := AdsImageId;
-      if aAdsImage <> '' then
-        ContentObj.AdsmediaId := 'addid';
-    end
-    else
-    begin
-      if AdsVdoId <> '' then
-        ContentObj.AdsmediaId := AdsVdoId;
-      if aAdsVdo <> '' then
-        ContentObj.AdsmediaId := 'addid';
-    end;
-    var
-    ValidateResult := ContentObj.Validate;
-    // // verify pass
-    if ValidateResult.FindValue('result').Value.ToBoolean then
-    begin
+      var Result := TJSONObject.Create;
       // new file delete old file
       var
       ImgObj := MContentfulImage.Create(CmaToken, SpaceId, Environment);
@@ -407,8 +439,8 @@ begin
         end;
         VideoObj.DeleteVdo;
       end;
-        var
-        uploadresult := False;
+      var
+      uploadresult := False;
       if TypeCbo.Selected.Text = 'Photo' then
       begin
         if AdsImageId <> '' then
@@ -518,9 +550,9 @@ begin
       VideoObj.Free;
       if uploadresult <> True then
       begin
-          BGProcess.Visible := False;
-          ProcessLabelAnimate.Enabled := False;
-          exit;
+        BGProcess.Visible := False;
+        ProcessLabelAnimate.Enabled := False;
+        exit;
       end;
       if AdsId = '' then
       begin
@@ -533,7 +565,8 @@ begin
         ContentObj.Id := AdsId;
         ContentObj.Version := Version;
         Result := ContentObj.Update;
-        if PublishStatus then ContentObj.Unpublish;
+        if PublishStatus then
+          ContentObj.UnPublish;
       end;
       if Result.FindValue('status').Value.ToBoolean then
       begin
@@ -560,12 +593,12 @@ begin
         end;
         // Ads Start
         // if start time more than now
-        if ScheduleDateTime > now then
+        if CompareDateTime(Adsstart, now) > 0 then
         begin
           // set start schedule
           var
           resultstart := ContentfulSchedule.Save(ContentObj.Id, 'publish',
-            ScheduleDateTime);
+            Adsstart);
         end
         else
         begin
@@ -574,13 +607,12 @@ begin
           presult := ContentObj.Publish;
         end;
         // Ads End
-        if ScheduleDateEndTime > now then
+        if CompareDateTime(Adsend, now) > 0 then
         begin
           var
-          resultend := ContentfulSchedule.Save(ContentObj.Id, 'unpublish',
-            ScheduleDateEndTime);
+          resultend := ContentfulSchedule.Save(ContentObj.Id,
+            'unpublish', Adsend);
         end;
-
         ContentfulSchedule.Free;
         // End schedule
         ShowMessage(Result.FindValue('message').Value);
@@ -592,28 +624,6 @@ begin
         ProcessLabelAnimate.Enabled := False;
         ShowMessage(Result.FindValue('result').Value);
       end;
-    end
-    else
-    begin
-      BGProcess.Visible := False;
-      ProcessLabelAnimate.Enabled := False;
-      const
-        sLineBreak = {$IFDEF MACOS64} AnsiChar(#10) {$ENDIF} {$IFDEF LINUX} AnsiChar(#10) {$ENDIF} {$IFDEF MSWINDOWS} AnsiString(#13#10) {$ENDIF};
-      var
-      ListError := '';
-      var
-      ErrorArray := ValidateResult.FindValue('error') as TJSONArray;
-      var
-      i := 0;
-      for i := 0 to ErrorArray.Count - 1 do
-      begin
-        var
-        ErrorItem := ErrorArray.Get(i) as TJSONObject;
-        ListError := Concat(ListError, ErrorItem.FindValue('message').Value,
-          sLineBreak);
-      end;
-      ShowMessage(ListError);
-    end;
   except
     on E: Exception do
     begin

@@ -51,11 +51,18 @@ type
     RegisterBtn: TButton;
     FrameStand1: TFrameStand;
     Label1: TLabel;
+    Button2: TButton;
+    TimeEdit1: TTimeEdit;
+    Memo1: TMemo;
+    TimeEdit2: TTimeEdit;
+    DateEdit1: TDateEdit;
+    DateEdit2: TDateEdit;
     procedure AdsMenuBtnClick(Sender: TObject);
     procedure AppConfigBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure LoginMenuBtnClick(Sender: TObject);
     procedure SProfileImageClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
     FFrameAdsLists: TFrameInfo<TfAdsLists>;
@@ -77,6 +84,7 @@ type
     SpaceId, CmaToken, Environment, DefaultTagToken, TagToken: String;
     ProfileObj:TMProfile;
     ImageWidthLimit: Integer;
+    function createDt(dateinput:String;dtime:TDateTime):TDateTime;
   end;
 
 var
@@ -87,6 +95,31 @@ implementation
 uses FApplicationConfig,AdsForm,ContentfulVideo,DesktopLogin,ContentfulImage,SpacebarProfile;
 
 {$R *.fmx}
+
+function TMainApplication.createDt(dateinput: String;dtime:TDateTime):TDateTime;
+begin
+  var sYear := StrToInt(Copy(dateinput, 7, 4));
+  var sMonth := StrToInt(Copy(dateinput, 4, 2));
+  var sDay := StrToInt(Copy(dateinput, 1, 2));
+  var sHour := FormatDateTime('hh', dtime).ToInteger;
+  var sMinute := FormatDateTime('nn', dtime).ToInteger;
+//  var sSecond := 00;
+//  var sMillisecond := Round(0000);
+  Result := EncodeDateTime(sYear, sMonth, sDay, sHour, sMinute,
+    00, Round(0000));
+end;
+
+procedure TMainApplication.Button2Click(Sender: TObject);
+begin
+  // Create Ads Start Date
+  var OldStart := createDt('01/10/2021',TimeEdit1.DateTime);
+  var OldEnd := createDt('30/10/2021',TimeEdit2.DateTime);
+  var
+  AdsstartdateTxt := createDt(DateEdit1.Text,TimeEdit1.DateTime);
+  var
+  AdsenddateTxt := createDt(DateEdit2.Text,TimeEdit2.DateTime);
+  if CompareDateTime(AdsenddateTxt,now) > 0 then Memo1.Lines.Add('unpublish');
+end;
 
 procedure TMainApplication.AdsMenuBtnClick(Sender: TObject);
 begin
